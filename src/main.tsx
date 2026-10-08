@@ -1,3 +1,4 @@
+import { installDesktopApi } from "./desktop";
 import { installFeedbackDiagnostics } from "./lib/feedback/diagnostics";
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -6,6 +7,7 @@ import { I18nProvider } from "./contexts/I18nContext.tsx";
 import { ThemeProvider } from "./contexts/ThemeContext.tsx";
 import "./index.css";
 
+await installDesktopApi();
 installFeedbackDiagnostics();
 
 document.documentElement.dataset.platform = /mac/i.test(navigator.platform) ? "macos" : "other";

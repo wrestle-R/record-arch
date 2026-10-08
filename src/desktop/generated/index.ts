@@ -1,0 +1,15 @@
+import {api0} from "./api0";
+import {api1} from "./api1";
+import {api2} from "./api2";
+import {api3} from "./api3";
+import {api4} from "./api4";
+import {api5} from "./api5";
+import {api6} from "./api6";
+import {api7} from "./api7";
+import {api8} from "./api8";
+import {api9} from "./api9";
+import {api10} from "./api10";
+import {api11} from "./api11";
+import {api12} from "./api12";
+import {api13} from "./api13";
+export const desktopApi={...api0,...api1,...api2,...api3,...api4,...api5,...api6,...api7,...api8,...api9,...api10,...api11,...api12,...api13};

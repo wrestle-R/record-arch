@@ -1,0 +1,39 @@
+[package]
+name = "record-arch"
+version = "0.1.0"
+edition = "2021"
+license = "AGPL-3.0-only"
+default-run = "record-arch-desktop"
+
+[features]
+default = []
+desktop = ["dep:tauri", "dep:tauri-build", "dep:tauri-plugin-dialog", "dep:tauri-plugin-single-instance"]
+
+[dependencies]
+anyhow = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4"] }
+dirs = "6"
+clap = { version = "4", features = ["derive"] }
+base64 = "0.22"
+tiny_http = "0.12"
+url = "2"
+nix = { version = "0.30", features = ["signal", "process"] }
+fs2 = "0.4"
+tauri = { version = "2", optional = true }
+tauri-plugin-dialog = { version = "2", optional = true }
+tauri-plugin-single-instance = { version = "2", optional = true }
+
+[build-dependencies]
+tauri-build = { version = "2", optional = true }
+
+[[bin]]
+name = "record-arch"
+path = "src/cli.rs"
+
+[[bin]]
+name = "record-arch-desktop"
+path = "src/main.rs"
+required-features = ["desktop"]

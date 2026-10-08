@@ -1,0 +1,1 @@
+{"identifier":"desktop","windows":["main","recorder"],"permissions":["core:default","dialog:allow-open","dialog:allow-save","core:window:allow-hide","core:window:allow-show","core:window:allow-set-focus","core:window:allow-close"]}
