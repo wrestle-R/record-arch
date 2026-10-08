@@ -38,6 +38,11 @@
     ],
     "icon": [
       "icons/icon.png"
-    ]
+    ],
+    "linux": {
+      "appimage": {
+        "bundleMediaFramework": true
+      }
+    }
   }
 }

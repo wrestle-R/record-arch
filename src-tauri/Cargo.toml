@@ -1,9 +1,12 @@
 [package]
-name = "record-arch"
+name = "record-arch-desktop"
 version = "0.1.0"
 edition = "2021"
 license = "AGPL-3.0-only"
 default-run = "record-arch-desktop"
+
+[lib]
+name = "record_arch"
 
 [features]
 default = []
@@ -22,12 +25,12 @@ tiny_http = "0.12"
 url = "2"
 nix = { version = "0.30", features = ["signal", "process"] }
 fs2 = "0.4"
-tauri = { version = "2", optional = true, features=["tray-icon"] }
+tauri = { version = "2", optional = true, features= ["tray-icon"] }
 tauri-plugin-dialog = { version = "2", optional = true }
 tauri-plugin-single-instance = { version = "2", optional = true }
 
 [build-dependencies]
-tauri-build = { version = "2", optional = true }
+tauri-build = { version = "2", optional = true , features = [] }
 
 [[bin]]
 name = "record-arch"
