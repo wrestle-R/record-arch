@@ -22,10 +22,10 @@ Build the desktop and CLI:
 
 ```sh
 npm run build
-cargo build --manifest-path src-tauri/Cargo.toml --features desktop --bins
+cargo build --manifest-path src-tauri/Cargo.toml --features desktop,tauri/custom-protocol --bins
 ```
 
-The binaries are in `src-tauri/target/debug/`. Release builds use `--release`. `npm run tauri -- build` builds distributable desktop packages.
+The binaries are in `src-tauri/target/debug/`. This build embeds the production frontend, so it runs without Vite. Release builds use `--release`. `npm run tauri -- build` builds distributable desktop packages.
 
 ## Workspace
 
