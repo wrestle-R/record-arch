@@ -34,6 +34,27 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
                 let path = s.readable(Path::new(string(a, 0)?))?;
                 crate::core::waveform::peaks(&path, arg(a, 1).as_u64().unwrap_or(1000) as usize)?
             }
+            "generate-auto-captions" => {
+                let options = arg(a, 0);
+                let video = s.readable(Path::new(
+                    options["videoPath"]
+                        .as_str()
+                        .context("Video path missing")?,
+                ))?;
+                let model = s.readable(Path::new(
+                    options["whisperModelPath"]
+                        .as_str()
+                        .context("Whisper model missing")?,
+                ))?;
+                crate::core::captions::generate(
+                    &video,
+                    &model,
+                    options["whisperExecutablePath"]
+                        .as_str()
+                        .unwrap_or("whisper-cli"),
+                    options["language"].as_str().unwrap_or("auto"),
+                )?
+            }
             "probe-native-video-metadata" => {
                 let path = s.readable(Path::new(string(a, 0)?))?;
                 json!({"success":true,"metadata":media::probe(&path)?})
@@ -42,7 +63,7 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
                 let path = s.readable(Path::new(string(a, 0)?))?;
                 let image = media::frame(&path, arg(a, 1).as_f64().unwrap_or(0.))?;
                 let url = format!("data:image/png;base64,{}", STANDARD.encode(image));
-                json!({"success":true,"dataUrl":url,"thumbnailUrl":url})
+                json!({"success":true,"dataUrl":url,"thumbnailUrl":url,"value":url})
             }
             "read-local-file" => {
                 let path = s.readable(Path::new(string(a, 0)?))?;
@@ -51,6 +72,27 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
                     bail!("Use the media stream for files over 64 MiB");
                 }
                 json!({"success":true,"data":data})
+            }
+            "arch-convert-gif" => {
+                let source = files::managed(Path::new(string(a, 0)?))?;
+                let path = files::root()
+                    .join(".cache")
+                    .join(format!("export-{}.gif", uuid::Uuid::new_v4()));
+                media::command(
+                    "ffmpeg",
+                    &[
+                        "-v",
+                        "error",
+                        "-i",
+                        source.to_str().context("Invalid path")?,
+                        "-filter_complex",
+                        "[0:v]split[a][b];[a]palettegen[p];[b][p]paletteuse",
+                        "-loop",
+                        if arg(a, 1)["loop"] == true { "0" } else { "-1" },
+                        path.to_str().unwrap(),
+                    ],
+                )?;
+                json!({"success":true,"path":path})
             }
             "arch-encode-start" => {
                 let encoder = export::Encoder::start(arg(a, 0))?;
@@ -126,6 +168,7 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
             "write-exported-video-to-path" => {
                 let path = Path::new(string(a, 1)?);
                 files::atomic_write(path, &bytes(arg(a, 0))?)?;
+                crate::core::captions::sidecar(path, arg(a, 2))?;
                 json!({"success":true,"path":path})
             }
             "finalize-exported-video" => {
@@ -145,6 +188,7 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
                 }
                 fs::create_dir_all(output.parent().context("No output directory")?)?;
                 fs::copy(&temp, &output)?;
+                crate::core::captions::sidecar(&output, &arg(a, 0)["captionSidecar"])?;
                 fs::remove_file(temp)?;
                 json!({"success":true,"path":output})
             }

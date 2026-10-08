@@ -114,7 +114,7 @@ export function EditorSidebar({
 					>
 						<AccountAvatar user={accountUser} className="!size-7" />
 					</Button>
-					<Tooltip.Content placement="right">Account</Tooltip.Content>
+					<Tooltip.Content placement="right">Local workspace</Tooltip.Content>
 				</Tooltip>
 			</nav>
 			<aside

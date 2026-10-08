@@ -130,7 +130,7 @@ export function useExportRunner(input: ExportRunnerInput) {
 
 				if (settings.format === "gif" && settings.gifConfig) {
 					// GIF Export
-					const { GifExporter } = await import("@/lib/exporter/gifExporter");
+					const { NativeGifExporter: GifExporter } = await import("@/arch/NativeGifExporter");
 					if (exportWasCancelled()) return;
 					const gifExporter = new GifExporter({
 						videoUrl: videoPath,

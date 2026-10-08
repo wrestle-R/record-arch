@@ -13,6 +13,7 @@ use std::{
 };
 #[derive(Default)]
 pub struct Recorder {
+    pub sidecars: Vec<super::sidecar_capture::Sidecar>,
     pub child: Option<Child>,
     pub output: Option<PathBuf>,
     pub paused: bool,
@@ -103,6 +104,24 @@ impl Recorder {
             );
         }
         self.child = Some(child);
+        let device_result = (|| -> Result<()> {
+            if let Some(source) = options["microphone"].as_str() {
+                self.sidecars
+                    .push(super::sidecar_capture::Sidecar::microphone(
+                        &output, source,
+                    )?);
+            }
+            if let Some(device) = options["webcam"].as_str() {
+                self.sidecars
+                    .push(super::sidecar_capture::Sidecar::webcam(&output, device)?);
+            }
+            Ok(())
+        })();
+        if let Err(error) = device_result {
+            let _ = self.stop();
+            self.sidecars.clear();
+            return Err(error);
+        }
         self.output = Some(output.clone());
         self.started = Some(Instant::now());
         self.paused = false;
@@ -120,6 +139,13 @@ impl Recorder {
                 Signal::SIGCONT
             },
         )?;
+        for sidecar in &self.sidecars {
+            sidecar.signal(if paused {
+                Signal::SIGSTOP
+            } else {
+                Signal::SIGCONT
+            })?;
+        }
         self.paused = paused;
         Ok(json!({"success":true}))
     }
@@ -141,10 +167,16 @@ impl Recorder {
             }
             std::thread::sleep(Duration::from_millis(50));
         }
+        for sidecar in &mut self.sidecars {
+            sidecar.stop()?;
+        }
+        self.sidecars.clear();
         self.paused = false;
         let output = self.output.clone().context("Recording path missing")?;
         media::probe(&output)?;
-        Ok(json!({"success":true,"path":output,"videoPath":output}))
+        Ok(
+            json!({"success":true,"path":output,"videoPath":output,"webcamPath":output.with_extension("webcam.mp4").is_file().then(||output.with_extension("webcam.mp4"))}),
+        )
     }
 }
 impl Drop for Recorder {

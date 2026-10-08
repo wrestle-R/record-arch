@@ -22,7 +22,7 @@ tiny_http = "0.12"
 url = "2"
 nix = { version = "0.30", features = ["signal", "process"] }
 fs2 = "0.4"
-tauri = { version = "2", optional = true }
+tauri = { version = "2", optional = true, features=["tray-icon"] }
 tauri-plugin-dialog = { version = "2", optional = true }
 tauri-plugin-single-instance = { version = "2", optional = true }
 

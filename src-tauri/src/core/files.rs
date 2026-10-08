@@ -43,7 +43,7 @@ pub fn atomic_write(path: &Path, bytes: &[u8]) -> Result<()> {
 }
 pub fn read_json(path: &Path) -> Result<Value> {
     Ok(serde_json::from_str(
-        &fs::read_to_string(path)?.trim_start_matches('\u{feff}'),
+        fs::read_to_string(path)?.trim_start_matches('\u{feff}'),
     )?)
 }
 pub fn write_json(path: &Path, value: &Value) -> Result<()> {

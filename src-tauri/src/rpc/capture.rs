@@ -6,12 +6,17 @@ use std::path::Path;
 pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
     Some(match c {
         "get-sources" | "arch-sources" => capture::sources(),
+        "arch-devices" => crate::core::devices::list(),
         "arch-record-status" => Ok(s.recorder.status()),
         "arch-record-start" => string(a, 0).and_then(|source| s.recorder.start(source, arg(a, 1))),
         "arch-record-stop" | "stop-ffmpeg-recording" => s.recorder.stop().and_then(|v| {
             if let Some(p) = v["path"].as_str() {
                 s.select_video(Path::new(p))?;
                 s.project = None;
+                if let Some(webcam) = v["webcamPath"].as_str() {
+                    s.approve(Path::new(webcam))?;
+                    s.session["webcamPath"] = webcam.into();
+                }
             }
             s.event("arch-recording-complete", json!([v]));
             Ok(json!({"success":true,"session":s.session,"path":v["path"]}))

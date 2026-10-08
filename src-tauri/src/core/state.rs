@@ -9,6 +9,9 @@ use std::{
 
 pub struct State {
     pub video: Option<PathBuf>,
+    pub renderer_ready: bool,
+    pub unsaved: bool,
+    pub jobs: HashMap<String, Value>,
     pub project: Option<PathBuf>,
     pub session: Value,
     pub approved: HashSet<PathBuf>,
@@ -25,6 +28,9 @@ impl State {
         files::init()?;
         Ok(Arc::new(Mutex::new(Self {
             video: None,
+            renderer_ready: false,
+            unsaved: false,
+            jobs: HashMap::new(),
             project: None,
             session: Value::Null,
             approved: HashSet::new(),

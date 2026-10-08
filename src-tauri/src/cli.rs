@@ -1,3 +1,4 @@
+mod cli_export;
 use clap::{Parser, Subcommand};
 use record_arch::{
     core::{files, media, state::State},
@@ -18,6 +19,12 @@ struct Cli {
 }
 #[derive(Subcommand)]
 enum Commands {
+    Export {
+        #[command(subcommand)]
+        command: cli_export::ExportCommand,
+    },
+    Recorder,
+    Devices,
     Doctor,
     Serve,
     Sources {
@@ -57,6 +64,10 @@ enum RecordCommand {
         system_audio: bool,
         #[arg(long)]
         hide_cursor: bool,
+        #[arg(long)]
+        microphone: Option<String>,
+        #[arg(long)]
+        webcam: Option<String>,
     },
     Status,
     Stop,
@@ -83,6 +94,9 @@ enum ProjectCommand {
 }
 fn run(cli: &Cli) -> anyhow::Result<Value> {
     Ok(match &cli.command {
+        Commands::Export { command } => cli_export::run(command)?,
+        Commands::Recorder => server::call("arch-show-recorder", json!([]))?,
+        Commands::Devices => server::call("arch-devices", json!([]))?,
         Commands::Doctor => media::doctor(),
         Commands::Serve => {
             let state = State::new()?;
@@ -101,9 +115,11 @@ fn run(cli: &Cli) -> anyhow::Result<Value> {
                 output,
                 system_audio,
                 hide_cursor,
+                microphone,
+                webcam,
             } => server::call(
                 "arch-record-start",
-                json!([source,{"output":output,"systemAudio":system_audio,"hideCursor":hide_cursor}]),
+                json!([source,{"output":output,"systemAudio":system_audio,"hideCursor":hide_cursor,"microphone":microphone,"webcam":webcam}]),
             )?,
             RecordCommand::Status => server::call("arch-record-status", json!([]))?,
             RecordCommand::Stop => server::call("arch-record-stop", json!([]))?,

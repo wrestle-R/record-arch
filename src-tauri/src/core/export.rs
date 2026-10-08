@@ -194,7 +194,7 @@ pub fn mix_audio(options: &Value) -> Result<PathBuf> {
                 source,
             ],
         )?)?;
-        if info["streams"].as_array().map_or(true, |s| s.is_empty()) {
+        if info["streams"].as_array().is_none_or(|s| s.is_empty()) {
             continue;
         }
         cmd.args(["-i", source]);
@@ -209,6 +209,9 @@ pub fn mix_audio(options: &Value) -> Result<PathBuf> {
             tempo /= 0.5;
         }
         chain.push(format!("atempo={tempo}"));
+        if track["normalize"] == true {
+            chain.push("loudnorm=I=-16:TP=-1.5:LRA=11".into());
+        }
         filters.push(format!("[{index}:a]atrim=start={start}:end={end},asetpts=PTS-STARTPTS,{},volume={volume},adelay={}|{}[a{index}]",chain.join(","),(output_start*1000.).round(),(output_start*1000.).round()));
         labels.push(format!("[a{index}]"));
         index += 1;

@@ -26,8 +26,10 @@ pub fn peaks(path: &Path, count: usize) -> Result<Value> {
         ],
     )?;
     let samples: Vec<f32> = data
-        .chunks_exact(4)
-        .map(|b| f32::from_le_bytes(b.try_into().unwrap()).abs())
+        .as_chunks::<4>()
+        .0
+        .iter()
+        .map(|b| f32::from_le_bytes(*b).abs())
         .collect();
     let mut peaks = vec![0.0_f32; count];
     for (i, sample) in samples.iter().enumerate() {

@@ -11,6 +11,10 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
             s.event(c, json!([]));
             json!({"success":true})
         }
+        "set-has-unsaved-changes" => {
+            s.unsaved = arg(a, 0) == true;
+            json!({"success":true})
+        }
         "arch-doctor" => media::doctor(),
         "get-platform" => json!("linux"),
         "app:getVersion" => json!(env!("CARGO_PKG_VERSION")),
@@ -76,7 +80,13 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
             json!({"success":true,"available":false,"exists":false})
         }
         "get-system-cursor-assets" => json!({"success":true,"assets":{}}),
-        "get-video-audio-fallback-paths" => json!({"success":true,"paths":[]}),
+        "get-video-audio-fallback-paths" => {
+            let paths = string(a, 0)
+                .ok()
+                .map(|p| crate::core::devices::audio_sidecars(std::path::Path::new(p)))
+                .unwrap_or_default();
+            json!({"success":true,"paths":paths})
+        }
         "announcements:get" => json!({"success":true,"announcements":[]}),
         "auth:get-pending-callback" => Value::Null,
         _ => return None,

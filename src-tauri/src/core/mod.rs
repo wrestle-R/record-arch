@@ -6,3 +6,10 @@ pub mod media;
 pub mod state;
 
 pub mod waveform;
+
+pub mod devices;
+pub mod sidecar_capture;
+
+pub mod captions;
+
+pub mod recordings;

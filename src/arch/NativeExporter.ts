@@ -1,52 +1,155 @@
-import { FrameRenderer } from '@/lib/exporter/frameRenderer';
-import { getLocalFilePath } from '@/lib/exporter/localMediaSource';
-import type { VideoExporter } from '@/lib/exporter/videoExporter';
-import type { ExportResult } from '@/lib/exporter/types';
-import { rpc } from '@/desktop/transport';
-import { buildNativeTimeline } from './nativeTimeline';
-type Config=ConstructorParameters<typeof VideoExporter>[0];
+import { FrameRenderer } from "@/lib/exporter/frameRenderer";
+import { getLocalFilePath } from "@/lib/exporter/localMediaSource";
+import type { VideoExporter } from "@/lib/exporter/videoExporter";
+import type { ExportResult } from "@/lib/exporter/types";
+import { rpc } from "@/desktop/transport";
+import { buildNativeTimeline } from "./nativeTimeline";
+type Config = ConstructorParameters<typeof VideoExporter>[0];
 export class NativeExporter {
-  private cancelled=false;private session:string|null=null;
-  constructor(private config:Config){}
-  cancel(){this.cancelled=true;if(this.session)void rpc('arch-encode-cancel',this.session);}
-  async export():Promise<ExportResult>{
-    const config=this.config;let renderer:FrameRenderer|null=null;
-    try{
-      const path=getLocalFilePath(config.videoUrl);if(!path)throw new Error('Native export requires a local video.');
-      const probe=await rpc('probe-native-video-metadata',path);if(!probe.success)throw new Error(probe.error);
-      const metadata=probe.metadata;
-      const segments=buildNativeTimeline(metadata.duration,config.clipRegions,config.trimRegions,config.speedRegions);
-      const duration=Math.max(0,...segments.map(s=>s.outputEnd));if(!duration)throw new Error('The timeline is empty.');
-      renderer=new FrameRenderer({...config,videoWidth:metadata.width,videoHeight:metadata.height,preferredRenderBackend:'webgl'});
-      await renderer.initialize();
-      const started=await rpc('arch-encode-start',config);if(!started.success)throw new Error(started.error);this.session=started.sessionId;
-      const total=Math.ceil(duration*config.frameRate);const start=performance.now();
-      const canvas=document.createElement('canvas');canvas.width=metadata.width;canvas.height=metadata.height;const context=canvas.getContext('2d')!;
-      for(let index=0;index<total;index++){
-        if(this.cancelled)throw new Error('Export cancelled');
-        const time=index/config.frameRate;
-        const segment=segments.find(s=>time>=s.outputStart && time<s.outputEnd);
-        const sourceTime=segment?Math.min(segment.endSec-1/(config.frameRate*2),segment.startSec+(time-segment.outputStart)*segment.speed):0;
-        if(segment){
-          const frame=await rpc('arch-frame',path,sourceTime);if(!frame.success)throw new Error(frame.error);
-          const image=new Image();image.src=frame.dataUrl;await image.decode();context.drawImage(image,0,0);
-          // Pixi accepts CanvasImageSource. The editor renderer does not depend on VideoFrame metadata.
-          await renderer.renderFrame(canvas as unknown as VideoFrame,time*1e6,sourceTime*1e6,1e6/config.frameRate,time*1e6);
-        }else await renderer.renderFrame(null,time*1e6,time*1e6,1e6/config.frameRate,time*1e6);
-        const blob=await new Promise<Blob>((resolve,reject)=>renderer!.getCanvas().toBlob(b=>b?resolve(b):reject(new Error('Frame capture failed')),'image/png'));
-        const result=await rpc('arch-encode-frame',this.session,await blob.arrayBuffer());if(!result.success)throw new Error(result.error);
-        const elapsed=(performance.now()-start)/1000;
-        config.onProgress?.({currentFrame:index+1,totalFrames:total,percentage:(index+1)/total*95,estimatedTimeRemaining:elapsed/(index+1)*(total-index-1),renderBackend:'webgl',encodeBackend:'ffmpeg',encoderName:'libx264'});
-      }
-      const mixedSetting=config.sourceAudioTrackSettings?.mixed;
-      const sourceVolume=mixedSetting?.volume??1;
-      const tracks=segments.filter(s=>!s.muted&&sourceVolume>0).map(s=>({path,sourceStart:s.startSec,sourceEnd:s.endSec,outputStart:s.outputStart,speed:s.speed,volume:sourceVolume}));
-      for(const audio of config.audioRegions??[]){const audioPath=getLocalFilePath(audio.audioPath)??audio.audioPath;tracks.push({path:audioPath,sourceStart:0,sourceEnd:(audio.endMs-audio.startMs)/1000,outputStart:audio.startMs/1000,speed:1,volume:audio.volume});}
-      const mixed=await rpc('arch-mix-audio',{duration,tracks});if(!mixed.success)throw new Error(mixed.error);
-      const result=await rpc('arch-encode-finish',this.session,{audioPath:mixed.path});if(!result.success)throw new Error(result.error);
-      this.session=null;
-      return {success:true,tempFilePath:result.tempPath};
-    }catch(error){return {success:false,error:String(error)};}
-    finally{renderer?.destroy();if(this.session){await rpc('arch-encode-cancel',this.session).catch(()=>{});this.session=null;}}
-  }
+	private cancelled = false;
+	private session: string | null = null;
+	constructor(private config: Config) {}
+	cancel() {
+		this.cancelled = true;
+		if (this.session) void rpc("arch-encode-cancel", this.session);
+	}
+	async export(): Promise<ExportResult> {
+		const config = this.config;
+		let renderer: FrameRenderer | null = null;
+		try {
+			const path = getLocalFilePath(config.videoUrl);
+			if (!path) throw new Error("Native export requires a local video.");
+			const probe = await rpc("probe-native-video-metadata", path);
+			if (!probe.success) throw new Error(probe.error);
+			const metadata = probe.metadata;
+			const segments = buildNativeTimeline(
+				metadata.duration,
+				config.clipRegions,
+				config.trimRegions,
+				config.speedRegions,
+			);
+			const duration = Math.max(0, ...segments.map((s) => s.outputEnd));
+			if (!duration) throw new Error("The timeline is empty.");
+			renderer = new FrameRenderer({
+				...config,
+				videoWidth: metadata.width,
+				videoHeight: metadata.height,
+				preferredRenderBackend: "webgl",
+			});
+			await renderer.initialize();
+			const started = await rpc("arch-encode-start", config);
+			if (!started.success) throw new Error(started.error);
+			this.session = started.sessionId;
+			const total = Math.ceil(duration * config.frameRate);
+			const start = performance.now();
+			const canvas = document.createElement("canvas");
+			canvas.width = metadata.width;
+			canvas.height = metadata.height;
+			const context = canvas.getContext("2d")!;
+			for (let index = 0; index < total; index++) {
+				if (this.cancelled) throw new Error("Export cancelled");
+				const time = index / config.frameRate;
+				const segment = segments.find((s) => time >= s.outputStart && time < s.outputEnd);
+				const sourceTime = segment
+					? Math.min(
+							segment.endSec - 1 / (config.frameRate * 2),
+							segment.startSec + (time - segment.outputStart) * segment.speed,
+						)
+					: 0;
+				if (segment) {
+					const frame = await rpc("arch-frame", path, sourceTime);
+					if (!frame.success) throw new Error(frame.error);
+					const image = new Image();
+					image.src = frame.dataUrl;
+					await image.decode();
+					context.drawImage(image, 0, 0);
+					// Pixi accepts CanvasImageSource. The editor renderer does not depend on VideoFrame metadata.
+					await renderer.renderFrame(
+						canvas as unknown as VideoFrame,
+						time * 1e6,
+						sourceTime * 1e6,
+						1e6 / config.frameRate,
+						time * 1e6,
+					);
+				} else
+					await renderer.renderFrame(
+						null,
+						time * 1e6,
+						time * 1e6,
+						1e6 / config.frameRate,
+						time * 1e6,
+					);
+				const blob = await new Promise<Blob>((resolve, reject) =>
+					renderer!
+						.getCanvas()
+						.toBlob(
+							(b) => (b ? resolve(b) : reject(new Error("Frame capture failed"))),
+							"image/png",
+						),
+				);
+				const result = await rpc(
+					"arch-encode-frame",
+					this.session,
+					await blob.arrayBuffer(),
+				);
+				if (!result.success) throw new Error(result.error);
+				const elapsed = (performance.now() - start) / 1000;
+				config.onProgress?.({
+					currentFrame: index + 1,
+					totalFrames: total,
+					percentage: ((index + 1) / total) * 95,
+					estimatedTimeRemaining: (elapsed / (index + 1)) * (total - index - 1),
+					renderBackend: "webgl",
+					encodeBackend: "ffmpeg",
+					encoderName: "libx264",
+				});
+			}
+			const sourcePaths = [
+				path,
+				...(config.sourceAudioFallbackPaths ?? []).map((p) => getLocalFilePath(p) ?? p),
+			];
+			const tracks = sourcePaths.flatMap((audioPath, index) => {
+				const id = index === 0 ? "mixed" : audioPath.includes(".mic.") ? "mic" : "system";
+				const setting = config.sourceAudioTrackSettings?.[id];
+				const volume = setting?.volume ?? 1;
+				return segments
+					.filter((s) => !s.muted && volume > 0)
+					.map((s) => ({
+						path: audioPath,
+						sourceStart: s.startSec,
+						sourceEnd: s.endSec,
+						outputStart: s.outputStart,
+						speed: s.speed,
+						volume,
+						normalize: setting?.normalize ?? false,
+					}));
+			});
+			for (const audio of config.audioRegions ?? []) {
+				const audioPath = getLocalFilePath(audio.audioPath) ?? audio.audioPath;
+				tracks.push({
+					path: audioPath,
+					sourceStart: 0,
+					sourceEnd: (audio.endMs - audio.startMs) / 1000,
+					outputStart: audio.startMs / 1000,
+					speed: 1,
+					volume: audio.volume,
+					normalize: audio.normalize ?? false,
+				});
+			}
+			const mixed = await rpc("arch-mix-audio", { duration, tracks });
+			if (!mixed.success) throw new Error(mixed.error);
+			const result = await rpc("arch-encode-finish", this.session, { audioPath: mixed.path });
+			if (!result.success) throw new Error(result.error);
+			this.session = null;
+			return { success: true, tempFilePath: result.tempPath };
+		} catch (error) {
+			return { success: false, error: String(error) };
+		} finally {
+			renderer?.destroy();
+			if (this.session) {
+				await rpc("arch-encode-cancel", this.session).catch(() => {});
+				this.session = null;
+			}
+		}
+	}
 }

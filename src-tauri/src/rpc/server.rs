@@ -14,6 +14,9 @@ use std::{
 };
 use tiny_http::{Header, Response, Server, StatusCode};
 pub fn socket_path() -> PathBuf {
+    if let Some(path) = std::env::var_os("RECORD_ARCH_SOCKET") {
+        return PathBuf::from(path);
+    }
     dirs::runtime_dir()
         .unwrap_or_else(|| files::root().join(".cache"))
         .join("record-arch.sock")

@@ -12,6 +12,28 @@ async fn command(
     channel: String,
     args: Vec<Value>,
 ) -> Result<Value, String> {
+    if channel == "arch-smoke-report" && std::env::var_os("RECORD_ARCH_SMOKE_VIDEO").is_some() {
+        crate::core::files::write_json(
+            &crate::core::files::root().join(".cache/native-smoke.json"),
+            args.first().unwrap_or(&Value::Null),
+        )
+        .map_err(|e| e.to_string())?;
+        eprintln!(
+            "Native smoke result: {}",
+            args.first().unwrap_or(&Value::Null)
+        );
+        app.exit(if args.first().is_some_and(|v| v["success"] == true) {
+            0
+        } else {
+            1
+        });
+        return Ok(json!({"success":true}));
+    }
+    if channel == "arch-close-approved" {
+        state.lock().map_err(|e| e.to_string())?.unsaved = false;
+        app.exit(0);
+        return Ok(json!({"success":true}));
+    }
     if channel == "arch-hide-recording-windows" {
         for w in app.webview_windows().values() {
             let _ = w.hide();
@@ -49,9 +71,28 @@ pub fn run() {
         .manage(state.clone())
         .invoke_handler(tauri::generate_handler![command])
         .setup(move |app| {
+            if let Some(path) = std::env::var_os("RECORD_ARCH_SMOKE_VIDEO") {
+                state
+                    .lock()
+                    .unwrap()
+                    .select_video(std::path::Path::new(&path))?;
+            }
             rpc::server::start(&state)?;
+            if let Err(error) = crate::tray::install(app) {
+                eprintln!("Tray unavailable: {error}. Use the CLI to control recording.");
+            }
             let handle = app.handle().clone();
             let shared = state.clone();
+            if std::env::var_os("RECORD_ARCH_SMOKE_VIDEO").is_some() {
+                let diagnostic = state.clone();
+                std::thread::spawn(move || {
+                    std::thread::sleep(std::time::Duration::from_secs(8));
+                    diagnostic
+                        .lock()
+                        .unwrap()
+                        .event("arch-native-smoke", json!([]));
+                });
+            }
             std::thread::spawn(move || loop {
                 let events = {
                     let mut state = shared.lock().unwrap();
@@ -71,7 +112,7 @@ pub fn run() {
                                     tauri::WebviewUrl::App("index.html?windowType=recorder".into()),
                                 )
                                 .title("Record Arch · Recorder")
-                                .inner_size(560., 620.)
+                                .inner_size(560., 780.)
                                 .resizable(false)
                                 .build();
                             }
@@ -97,6 +138,34 @@ pub fn run() {
             });
             Ok(())
         })
-        .run(tauri::generate_context!())
-        .expect("Record Arch failed");
+        .on_window_event(|window, event| {
+            if window.label() == "main" {
+                if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                    let shared = window.state::<Shared>();
+                    let mut s = shared.lock().unwrap();
+                    if s.unsaved {
+                        api.prevent_close();
+                        let _ = window.emit(
+                            "request-save-before-close",
+                            json!([uuid::Uuid::new_v4().to_string()]),
+                        );
+                    } else if s.recorder.status()["recording"] == true {
+                        api.prevent_close();
+                        let _ = window.hide();
+                    }
+                }
+            }
+        })
+        .build(tauri::generate_context!())
+        .expect("Record Arch failed")
+        .run(|app, event| {
+            if let tauri::RunEvent::Exit = event {
+                let shared = app.state::<Shared>();
+                let mut s = shared.lock().unwrap();
+                if s.recorder.child.is_some() {
+                    let _ = s.recorder.stop();
+                }
+                s.encoders.clear();
+            }
+        });
 }

@@ -1,4 +1,5 @@
 pub mod capture;
+pub mod jobs;
 pub mod library;
 pub mod media;
 pub mod server;
@@ -12,6 +13,7 @@ pub fn dispatch(state: &Shared, channel: &str, args: &[Value]) -> Result<Value> 
         .lock()
         .map_err(|_| anyhow::anyhow!("Application state unavailable"))?;
     for handler in [
+        jobs::handle,
         library::handle,
         settings::handle,
         media::handle,
