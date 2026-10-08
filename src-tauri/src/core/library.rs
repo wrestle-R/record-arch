@@ -172,7 +172,14 @@ pub fn import(state: &mut State, path: &Path) -> Result<Value> {
         .join(uuid::Uuid::new_v4().to_string());
     fs::create_dir_all(&parent)?;
     let target = parent.join(source.file_name().context("Missing file name")?);
-    fs::copy(source, &target)?;
+    if let Err(error) = (|| -> Result<()> {
+        fs::copy(&source, &target)?;
+        super::recording_sidecars::copy(&source, &target)?;
+        Ok(())
+    })() {
+        let _ = fs::remove_dir_all(&parent);
+        return Err(error);
+    }
     state.select_video(&target)?;
     state.project = None;
     Ok(json!({"success":true,"path":target,"kind":"video"}))

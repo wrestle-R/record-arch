@@ -80,6 +80,13 @@ impl State {
         let path = self.approve(path)?;
         self.video = Some(path.clone());
         self.session = serde_json::json!({"videoPath":path,"webcamPath":null,"timeOffsetMs":0,"hideOverlayCursorByDefault":true});
+        if let Some(webcam) = super::recording_sidecars::webcam(&path) {
+            let webcam = self.approve(&webcam)?;
+            self.session["webcamPath"] = serde_json::json!(webcam);
+        }
+        for audio in super::recording_sidecars::audio(&path) {
+            self.approve(&audio)?;
+        }
         self.event(
             "recording-session-changed",
             serde_json::json!([self.session]),

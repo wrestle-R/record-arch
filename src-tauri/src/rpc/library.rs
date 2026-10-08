@@ -9,7 +9,7 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
         "get-current-video-path"|"get-recorded-video-path"=>json!({"success":s.video.is_some(),"path":s.video}),
         "get-current-recording-session"=>json!({"success":!s.session.is_null(),"session":s.session}),
         "clear-current-video-path"=>{s.video=None;s.session=Value::Null;json!({"success":true})},
-        "set-current-video-path"=>{s.select_video(Path::new(string(a,0)?))?;if arg(a,1)["preserveProjectPath"]!=true{s.project=None;}json!({"success":true,"webcamPath":null})},
+        "set-current-video-path"=>{s.select_video(Path::new(string(a,0)?))?;if arg(a,1)["preserveProjectPath"]!=true{s.project=None;}json!({"success":true,"webcamPath":s.session["webcamPath"]})},
         "set-current-recording-session"=>{let session=arg(a,0);s.select_video(Path::new(session["videoPath"].as_str().ok_or_else(||anyhow::anyhow!("Missing videoPath"))?))?;if let Some(p)=session["webcamPath"].as_str(){s.approve(Path::new(p))?;}s.session=session.clone();json!({"success":true})},
         "arch-approve-file"=>{let path=s.approve(Path::new(string(a,0)?))?;json!({"success":true,"path":path})},
         "arch-import"=>library::import(s,Path::new(string(a,0)?))?,
@@ -29,8 +29,6 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
         "import-recording"=>crate::core::recordings::append(s,Path::new(string(a,0)?),Path::new(string(a,1)?))?,
         "finish-recording-import"=>json!({"success":true}),
         "get-local-media-url"=>{let path=s.readable(Path::new(string(a,0)?))?;json!({"success":true,"url":s.media_url(&path)})},
-        "get-cursor-telemetry"=>{let p=s.readable(Path::new(string(a,0)?))?;let samples=files::read_json(&p.with_extension("cursor.json")).unwrap_or(json!([]));json!({"success":true,"samples":samples,"telemetry":samples})},
-        "set-cursor-telemetry"=>{let p=s.readable(Path::new(string(a,0)?))?;files::write_json(&p.with_extension("cursor.json"),arg(a,1))?;json!({"success":true})},
         "arch-events"=>json!(std::mem::take(&mut s.events)),
         _=>return Err(anyhow::anyhow!("__unhandled"))
         };

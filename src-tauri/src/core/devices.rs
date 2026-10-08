@@ -18,10 +18,8 @@ pub fn list() -> Result<Value> {
     Ok(json!({"success":true,"microphones":microphones,"cameras":cameras}))
 }
 pub fn audio_sidecars(video: &Path) -> Vec<String> {
-    ["system.wav", "mic.wav"]
-        .iter()
-        .map(|ext| video.with_extension(ext))
-        .filter(|p| p.is_file())
+    super::recording_sidecars::audio(video)
+        .into_iter()
         .map(|p| p.to_string_lossy().into_owned())
         .collect()
 }

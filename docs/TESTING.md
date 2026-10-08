@@ -7,12 +7,12 @@ Verified locally on Arch Linux and Hyprland on 8 October 2026. This is a develop
 | Check | Result |
 | --- | --- |
 | TypeScript and production frontend build | Passed |
-| Frontend regression tests | 977 tests across 115 files passed |
-| Rust integration tests | Passed: import/save/reopen, stable project identity, copy/rename, backups, library removal/restore, access boundaries, byte ranges, stream abort, atomic publication and abandoned export status |
+| Frontend regression tests | 980 tests across 116 files passed |
+| Rust integration tests | Passed: import/save/reopen with legacy cursor/audio/webcam sidecars, telemetry normalization/save/clear, stable project identity, copy/rename, backups, library removal/restore, access boundaries, byte ranges, stream abort, atomic publication and abandoned export status |
 | Rust formatting and Clippy | Passed with warnings treated as errors |
 | Packaged Tauri/WebKit startup | Passed using production assets at `tauri://localhost`; no startup errors |
 | Native preview codecs | H.264/AAC playback passed with the installed system GStreamer plugins |
-| Native effects export | 640×360 H.264/AAC, 15 FPS, one second; decoded video pixels and background styling verified |
+| Native effects export | 640×360 H.264/AAC, 15 FPS, one second; decoded video pixels, background styling, cursor/audio/webcam discovery and source-track muting verified |
 | Browser editor preview | Composed preview contains the synthetic video's red/green pixels |
 | Editor/CLI flow | Playback, timeline hydration, save, MP4/GIF jobs, cancellation during rendering, subsequent export, latest-project reopening, source offsets, 2× speed, background changes and muted-audio samples passed |
 | Export buttons | Both MP4 and GIF outputs were written and inspected |

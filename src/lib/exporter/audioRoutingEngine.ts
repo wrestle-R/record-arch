@@ -31,7 +31,7 @@ export interface ResolvedAudioPlan {
 
 export function getSourceTrackIdFromPath(audioPath: string): SourceTrackId {
 	const normalized = audioPath.toLowerCase();
-	if (normalized.includes(".mic.")) return "mic";
+	if (normalized.includes(".mic.") || normalized.includes(".microphone.")) return "mic";
 	if (normalized.includes(".system.")) return "system";
 	return "mixed";
 }

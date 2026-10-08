@@ -71,6 +71,7 @@ export function getSourceTrackIdFromPath(audioPath: string): SourceTrackId {
 	// Check for common patterns like .mic., -mic., mic.mp4, etc.
 	if (
 		normalized.includes(".mic.") ||
+		normalized.includes(".microphone.") ||
 		normalized.includes("-mic.") ||
 		normalized.includes("_mic_") ||
 		normalized.includes("/mic.") ||

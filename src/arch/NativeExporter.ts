@@ -5,6 +5,7 @@ import type { ExportResult } from "@/lib/exporter/types";
 import { rpc } from "@/desktop/transport";
 import { buildNativeTimeline } from "./nativeTimeline";
 import { beginNativeRender } from "./nativeRenderSession";
+import { buildNativeAudioTracks } from "./nativeAudio";
 type Config = ConstructorParameters<typeof VideoExporter>[0];
 export class NativeExporter {
 	private cancelled = false;
@@ -123,38 +124,7 @@ export class NativeExporter {
 					encoderName: "libx264",
 				});
 			}
-			const sourcePaths = [
-				path,
-				...(config.sourceAudioFallbackPaths ?? []).map((p) => getLocalFilePath(p) ?? p),
-			];
-			const tracks = sourcePaths.flatMap((audioPath, index) => {
-				const id = index === 0 ? "mixed" : audioPath.includes(".mic.") ? "mic" : "system";
-				const setting = config.sourceAudioTrackSettings?.[id];
-				const volume = setting?.volume ?? 1;
-				return segments
-					.filter((s) => !s.muted && volume > 0)
-					.map((s) => ({
-						path: audioPath,
-						sourceStart: s.startSec,
-						sourceEnd: s.endSec,
-						outputStart: s.outputStart,
-						speed: s.speed,
-						volume,
-						normalize: setting?.normalize ?? false,
-					}));
-			});
-			for (const audio of config.audioRegions ?? []) {
-				const audioPath = getLocalFilePath(audio.audioPath) ?? audio.audioPath;
-				tracks.push({
-					path: audioPath,
-					sourceStart: 0,
-					sourceEnd: (audio.endMs - audio.startMs) / 1000,
-					outputStart: audio.startMs / 1000,
-					speed: 1,
-					volume: audio.volume,
-					normalize: audio.normalize ?? false,
-				});
-			}
+			const tracks = buildNativeAudioTracks(path, segments, config);
 			const mixed = await rpc("arch-mix-audio", { duration, tracks });
 			if (!mixed.success) throw new Error(mixed.error);
 			audioPath = mixed.path;

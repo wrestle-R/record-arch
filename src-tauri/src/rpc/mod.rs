@@ -1,5 +1,6 @@
 mod background;
 pub mod capture;
+mod cursor;
 pub mod jobs;
 pub mod library;
 pub mod media;
@@ -19,6 +20,7 @@ pub fn dispatch(state: &Shared, channel: &str, args: &[Value]) -> Result<Value> 
     for handler in [
         jobs::handle,
         library::handle,
+        cursor::handle,
         settings::handle,
         media::handle,
         capture::handle,

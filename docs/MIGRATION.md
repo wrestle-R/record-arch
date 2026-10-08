@@ -14,9 +14,9 @@ This is a Tauri/Rust migration with the existing React editor retained. It is no
 | Microphone/camera | FFmpeg PulseAudio/V4L2 sidecars, editor webcam settings | Device-specific verification required |
 | Recorder visibility | Windows hide; tray and CLI remain available | Visible HUD capture exclusion is not supported |
 | Window capture | Fixed Hyprland geometry region | Does not follow a moving window or isolate occlusion |
-| Cursor telemetry | Existing telemetry can be loaded/edited/rendered | Native click/keyboard telemetry capture has not been ported |
+| Cursor telemetry | Existing wrapped/array telemetry can be loaded/edited/rendered; imports preserve sidecars | Both upstream and early-preview filenames supported; native click/keyboard telemetry capture has not been ported |
 | Captions | Existing caption editing/rendering; Rust whisper-cli integration and SRT/VTT sidecars | Needs a local whisper executable and model |
-| Recording library | Discovery, thumbnails, hide/restore, appending media | Webcam/telemetry merge parity for multi-recording imports remains incomplete |
+| Recording library | Discovery, thumbnails, hide/restore, importing media with cursor/audio/webcam sidecars, appending media | Legacy webcam filenames supported; webcam/telemetry merge parity for multi-recording imports remains incomplete |
 | Accounts/cloud sharing | Original UI source retained, cloud destination disabled | Requires an independent hosting/auth backend; upstream credentials are not copied |
 | Updates/GPU backends | No upstream updater or platform-specific capture/export binaries | Linux software FFmpeg is the implemented encoder |
 

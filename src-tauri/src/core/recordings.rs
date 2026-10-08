@@ -15,7 +15,7 @@ pub fn list(s: &State, include_removed: bool) -> Result<Vec<Value>> {
             vec![p]
         };
         for p in paths {
-            if p.to_string_lossy().contains(".webcam.")
+            if super::recording_sidecars::is_media_sidecar(&p)
                 || !matches!(
                     p.extension().and_then(|e| e.to_str()),
                     Some("mp4" | "mkv" | "webm" | "mov")

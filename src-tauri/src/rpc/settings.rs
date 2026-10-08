@@ -79,11 +79,14 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
         "get-whisper-small-model-status" => crate::core::models::status(),
         "get-system-cursor-assets" => json!({"success":true,"assets":{}}),
         "get-video-audio-fallback-paths" => {
-            let paths = string(a, 0)
-                .ok()
-                .map(|p| crate::core::devices::audio_sidecars(std::path::Path::new(p)))
-                .unwrap_or_default();
-            json!({"success":true,"paths":paths})
+            return Some((|| {
+                let video = s.readable(std::path::Path::new(string(a, 0)?))?;
+                let paths = crate::core::devices::audio_sidecars(&video);
+                for path in &paths {
+                    s.approve(std::path::Path::new(path))?;
+                }
+                Ok(json!({"success":true,"paths":paths}))
+            })());
         }
         "announcements:get" => json!({"success":true,"announcements":[]}),
         "auth:get-pending-callback" => Value::Null,

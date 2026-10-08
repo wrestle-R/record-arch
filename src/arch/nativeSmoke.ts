@@ -5,6 +5,9 @@ export async function runNativeSmoke() {
 	try {
 		const source = await rpc("get-current-video-path");
 		const resource = await rpc("get-local-media-url", source.path);
+		const telemetry = await rpc("get-cursor-telemetry", source.path);
+		const companions = await rpc("get-video-audio-fallback-paths", source.path);
+		const session = await rpc("get-current-recording-session");
 		const video = document.createElement("video");
 		video.crossOrigin = "anonymous";
 		video.muted = true;
@@ -28,7 +31,13 @@ export async function runNativeSmoke() {
 			borderRadius: 8,
 			padding: 10,
 			cropRegion: { x: 0, y: 0, width: 1, height: 1 },
-			showCursor: false,
+			showCursor: true,
+			cursorTelemetry: telemetry.samples,
+			sourceAudioFallbackPaths: companions.paths,
+			sourceAudioTrackSettings: {
+				mic: { volume: 0, normalize: false },
+				system: { volume: 0, normalize: false },
+			},
 			annotationRegions: [],
 			clipRegions: [{ id: "smoke", startMs: 0, endMs: 1000, sourceStartMs: 0, speed: 1 }],
 		});
@@ -38,6 +47,9 @@ export async function runNativeSmoke() {
 			playbackWidth: video.videoWidth,
 			playbackHeight: video.videoHeight,
 			userAgent: navigator.userAgent,
+			cursorSamples: telemetry.samples.length,
+			audioCompanions: companions.paths.length,
+			webcamPath: session.session?.webcamPath,
 		});
 	} catch (error) {
 		await rpc("arch-smoke-report", { success: false, error: String(error) });

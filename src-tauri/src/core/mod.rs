@@ -20,4 +20,6 @@ pub mod models;
 
 mod capture_process;
 mod capture_source;
+pub mod cursor_telemetry;
 pub mod recording_segments;
+pub mod recording_sidecars;
