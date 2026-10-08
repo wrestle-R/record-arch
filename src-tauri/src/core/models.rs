@@ -2,6 +2,7 @@ use super::{files, media};
 use anyhow::{bail, Context, Result};
 use serde_json::{json, Value};
 use std::{fs, path::PathBuf};
+static MODEL_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
 const SMALL_SHA256: &str = "1be3a9b2063867b937e64e2ec7483364a79917e157fa98c5d94b5c1fffea987b";
 fn path() -> PathBuf {
     files::root().join("models/ggml-small.bin")
@@ -11,6 +12,9 @@ pub fn status() -> Value {
     json!({"success":true,"exists":path.is_file(),"path":path.is_file().then_some(path)})
 }
 pub fn download() -> Result<Value> {
+    let _guard = MODEL_LOCK
+        .lock()
+        .map_err(|_| anyhow::anyhow!("Model state unavailable"))?;
     let path = path();
     if path.is_file() {
         return Ok(json!({"success":true,"path":path,"alreadyDownloaded":true}));
@@ -49,6 +53,9 @@ pub fn download() -> Result<Value> {
     result
 }
 pub fn delete() -> Result<Value> {
+    let _guard = MODEL_LOCK
+        .lock()
+        .map_err(|_| anyhow::anyhow!("Model state unavailable"))?;
     let path = path();
     if path.exists() {
         fs::remove_file(path)?;

@@ -114,6 +114,17 @@ fn imported_media_survives_save_reopen_and_library_removal() {
     files::publish(&source, &destination).unwrap();
     assert!(files::publish(&outside, &destination).is_err());
     assert_eq!(std::fs::read(&destination).unwrap(), b"fixture media");
+    {
+        let mut s = state.lock().unwrap();
+        s.renderer_ready = Some(std::time::Instant::now() - std::time::Duration::from_secs(31));
+        s.jobs.insert(
+            "abandoned".into(),
+            json!({"id":"abandoned","status":"running"}),
+        );
+    }
+    let abandoned = rpc::dispatch(&state, "arch-export-status", &[json!("abandoned")]).unwrap();
+    assert_eq!(abandoned["job"]["status"], "failed");
+    assert_eq!(abandoned["job"]["error"], "Desktop renderer disconnected");
     std::fs::remove_file(outside).unwrap();
     std::fs::remove_dir_all(root).unwrap();
 }

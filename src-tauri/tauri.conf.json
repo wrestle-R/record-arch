@@ -24,7 +24,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: http://127.0.0.1:*; media-src 'self' blob: http://127.0.0.1:*; connect-src 'self' ipc: http://ipc.localhost http://127.0.0.1:* https:; worker-src 'self' blob:; font-src 'self' data:"
+      "csp": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: http://127.0.0.1:*; media-src 'self' blob: http://127.0.0.1:*; connect-src 'self' ipc: http://ipc.localhost http://127.0.0.1:* https:; worker-src 'self' blob:; font-src 'self' data: https://fonts.gstatic.com"
     }
   },
   "bundle": {
@@ -32,9 +32,6 @@
     "targets": [
       "appimage",
       "deb"
-    ],
-    "resources": [
-      "../public/**/*"
     ],
     "icon": [
       "icons/icon.png"

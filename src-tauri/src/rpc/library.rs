@@ -4,7 +4,8 @@ use anyhow::{bail, Result};
 use serde_json::{json, Value};
 use std::{fs, path::Path};
 pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
-    Some((||Ok(match c {
+    Some((|| {
+        let value = match c {
         "get-current-video-path"|"get-recorded-video-path"=>json!({"success":s.video.is_some(),"path":s.video}),
         "get-current-recording-session"=>json!({"success":!s.session.is_null(),"session":s.session}),
         "clear-current-video-path"=>{s.video=None;s.session=Value::Null;json!({"success":true})},
@@ -32,5 +33,7 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
         "set-cursor-telemetry"=>{let p=s.readable(Path::new(string(a,0)?))?;files::write_json(&p.with_extension("cursor.json"),arg(a,1))?;json!({"success":true})},
         "arch-events"=>json!(std::mem::take(&mut s.events)),
         _=>return Err(anyhow::anyhow!("__unhandled"))
-    }))()).filter(|r|!r.as_ref().err().is_some_and(|e|e.to_string()=="__unhandled"))
+        };
+        Ok(value)
+    })()).filter(|r|!r.as_ref().err().is_some_and(|e|e.to_string()=="__unhandled"))
 }

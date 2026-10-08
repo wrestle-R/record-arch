@@ -10,7 +10,7 @@ use std::{
 pub struct State {
     pub before_capture: Option<Box<dyn Fn() -> Result<()> + Send + Sync>>,
     pub video: Option<PathBuf>,
-    pub renderer_ready: bool,
+    pub renderer_ready: Option<std::time::Instant>,
     pub unsaved: bool,
     pub jobs: HashMap<String, Value>,
     pub project: Option<PathBuf>,
@@ -31,7 +31,7 @@ impl State {
         Ok(Arc::new(Mutex::new(Self {
             before_capture: None,
             video: None,
-            renderer_ready: false,
+            renderer_ready: None,
             unsaved: false,
             jobs: HashMap::new(),
             project: None,

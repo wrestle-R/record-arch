@@ -1,5 +1,5 @@
 use super::{arg, string};
-use crate::core::{export, files, media, state::State};
+use crate::core::{export, files, state::State};
 use anyhow::{bail, Context, Result};
 use base64::{engine::general_purpose::STANDARD, Engine};
 use serde_json::{json, Value};
@@ -30,78 +30,18 @@ fn bytes(value: &Value) -> Result<Vec<u8>> {
 pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
     Some((|| {
         Ok(match c {
-            "arch-audio-peaks" => {
-                let path = s.readable(Path::new(string(a, 0)?))?;
-                crate::core::waveform::peaks(&path, arg(a, 1).as_u64().unwrap_or(1000) as usize)?
-            }
-            "download-whisper-small-model" => crate::core::models::download()?,
-            "delete-whisper-small-model" => crate::core::models::delete()?,
-            "generate-auto-captions" => {
-                let options = arg(a, 0);
-                let video = s.readable(Path::new(
-                    options["videoPath"]
-                        .as_str()
-                        .context("Video path missing")?,
-                ))?;
-                let model = s.readable(Path::new(
-                    options["whisperModelPath"]
-                        .as_str()
-                        .context("Whisper model missing")?,
-                ))?;
-                crate::core::captions::generate(
-                    &video,
-                    &model,
-                    options["whisperExecutablePath"]
-                        .as_str()
-                        .unwrap_or("whisper-cli"),
-                    options["language"].as_str().unwrap_or("auto"),
-                )?
-            }
-            "probe-native-video-metadata" => {
-                let path = s.readable(Path::new(string(a, 0)?))?;
-                json!({"success":true,"metadata":media::probe(&path)?})
-            }
+
+
             "arch-decoder-open" => {
- let path=s.readable(Path::new(string(a,0)?))?;let decoder=crate::core::decoder::Decoder::start(&path,arg(a,1).as_f64().unwrap_or(0.),arg(a,2).as_f64().unwrap_or(30.))?;
- let id=uuid::Uuid::new_v4().to_string();s.decoders.insert(id.clone(),decoder);json!({"success":true,"sessionId":id})
+ let path=s.readable(Path::new(string(a,0)?))?;
+ let decoder=crate::core::decoder::Decoder::start(&path,arg(a,1).as_f64().unwrap_or(0.),arg(a,2).as_f64().unwrap_or(30.))?;
+ let id=uuid::Uuid::new_v4().to_string();
+ s.decoders.insert(id.clone(),decoder);
+ json!({"success":true,"sessionId":id})
  },
  "arch-decoder-next" => {let image=s.decoders.get_mut(string(a,0)?).context("Unknown decoder")?.frame()?;json!({"success":true,"dataUrl":format!("data:image/png;base64,{}",STANDARD.encode(image))})},
  "arch-decoder-close" => {s.decoders.remove(string(a,0)?);json!({"success":true})},
- "arch-frame" | "get-recording-thumbnail" | "generate-wallpaper-thumbnail" => {
-                let path = s.readable(Path::new(string(a, 0)?))?;
-                let image = media::frame(&path, arg(a, 1).as_f64().unwrap_or(0.))?;
-                let url = format!("data:image/png;base64,{}", STANDARD.encode(image));
-                json!({"success":true,"dataUrl":url,"thumbnailUrl":url,"value":url})
-            }
-            "read-local-file" => {
-                let path = s.readable(Path::new(string(a, 0)?))?;
-                let data = fs::read(path)?;
-                if data.len() > 64 * 1024 * 1024 {
-                    bail!("Use the media stream for files over 64 MiB");
-                }
-                json!({"success":true,"data":data})
-            }
-            "arch-convert-gif" => {
-                let source = files::managed(Path::new(string(a, 0)?))?;
-                let path = files::root()
-                    .join(".cache")
-                    .join(format!("export-{}.gif", uuid::Uuid::new_v4()));
-                media::command(
-                    "ffmpeg",
-                    &[
-                        "-v",
-                        "error",
-                        "-i",
-                        source.to_str().context("Invalid path")?,
-                        "-filter_complex",
-                        "[0:v]split[a][b];[a]palettegen[p];[b][p]paletteuse",
-                        "-loop",
-                        if arg(a, 1)["loop"] == true { "0" } else { "-1" },
-                        path.to_str().unwrap(),
-                    ],
-                )?;
-                json!({"success":true,"path":path})
-            }
+
             "arch-encode-start" => {
                 let encoder = export::Encoder::start(arg(a, 0))?;
                 let id = uuid::Uuid::new_v4().to_string();
@@ -116,26 +56,12 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
                 encoder.write(&bytes(arg(a, 1))?)?;
                 json!({"success":true})
             }
-            "arch-encode-finish" => {
-                let encoder = s
-                    .encoders
-                    .remove(string(a, 0)?)
-                    .context("Unknown encoder session")?;
-                encoder.finish(arg(a, 1))?
-            }
+
             "arch-encode-cancel" => {
                 s.encoders.remove(string(a, 0)?);
                 json!({"success":true})
             }
-            "arch-mix-audio" => {
-                for track in arg(a, 0)["tracks"].as_array().context("Missing tracks")? {
-                    s.readable(Path::new(
-                        track["path"].as_str().context("Missing track path")?,
-                    ))?;
-                }
-                let path = export::mix_audio(arg(a, 0))?;
-                json!({"success":true,"path":path})
-            }
+
             "export-stream-open" => {
                 let id = uuid::Uuid::new_v4().to_string();
                 let ext = arg(a, 0)["extension"].as_str().unwrap_or("mp4");

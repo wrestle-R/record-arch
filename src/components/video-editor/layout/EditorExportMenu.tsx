@@ -127,7 +127,6 @@ export function EditorExportMenu(props: Props) {
 		exportFinalizingProgress,
 		exportRenderSpeedLabel,
 		exportPercentLabel,
-		runtimeLabel: exportRuntimeLabel,
 		nativeSkipLabel: exportNativeSkipLabel,
 	} = exportStatus;
 
@@ -338,11 +337,6 @@ export function EditorExportMenu(props: Props) {
 												{exportRenderSpeedLabel}
 											</p>
 										) : null}
-										{exportRuntimeLabel ? (
-											<p className="mt-1 text-[11px] text-muted-foreground/70">
-												Path: {exportRuntimeLabel}
-											</p>
-										) : null}
 										{exportNativeSkipLabel ? (
 											<p className="mt-1 text-[11px] text-amber-500/80">
 												{exportNativeSkipLabel}
@@ -354,11 +348,6 @@ export function EditorExportMenu(props: Props) {
 										<p className="text-sm font-semibold text-foreground">
 											{t("editor.exportStatus.issue", "Export issue")}
 										</p>
-										{exportRuntimeLabel ? (
-											<p className="mt-1 text-[11px] text-muted-foreground/70">
-												Path: {exportRuntimeLabel}
-											</p>
-										) : null}
 										<p className="mt-1 select-text whitespace-pre-wrap break-words text-xs leading-relaxed text-muted-foreground">
 											{exportError}
 										</p>
@@ -425,11 +414,6 @@ export function EditorExportMenu(props: Props) {
 												"Your file was saved successfully.",
 											)}
 										</p>
-										{exportRuntimeLabel ? (
-											<p className="mt-1 text-[11px] text-muted-foreground/70">
-												Path: {exportRuntimeLabel}
-											</p>
-										) : null}
 										<p className="mt-3 truncate text-xs text-muted-foreground/70">
 											{exportedFilePath.split(/[\\/]/).pop()}
 										</p>

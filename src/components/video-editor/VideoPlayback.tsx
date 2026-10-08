@@ -373,6 +373,12 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 		},
 		ref,
 	) => {
+		const [nativeRendering, setNativeRendering] = useState(false);
+		useEffect(() => {
+			const update = (event: Event) => setNativeRendering(Boolean((event as CustomEvent<boolean>).detail));
+			window.addEventListener("arch-native-rendering", update);
+			return () => window.removeEventListener("arch-native-rendering", update);
+		}, []);
 		const videoRef = useRef<HTMLVideoElement | null>(null);
 		const previewVideoSourceRef = useRef(new PreviewVideoSource());
 		const attachVideo = useCallback((video: HTMLVideoElement | null) => {
@@ -1245,14 +1251,14 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 		}, [isPlaying]);
 
 		useEffect(() => {
-			suspendRenderingRef.current = suspendRendering;
+			suspendRenderingRef.current = suspendRendering || nativeRendering;
 			if (!pixiReady) return;
 			const app = appRef.current;
 			if (!app?.ticker) {
 				return;
 			}
 
-			if (suspendRendering) {
+			if (suspendRendering || nativeRendering) {
 				app.ticker.stop();
 				bgVideoRef.current?.pause();
 				webcamVideoRef.current?.pause();
@@ -1292,7 +1298,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 				bgVideoRef.current?.play().catch(() => undefined);
 				webcamVideoRef.current?.play().catch(() => undefined);
 			}
-		}, [pixiReady, suspendRendering]);
+		}, [pixiReady, suspendRendering, nativeRendering]);
 
 		// Backgrounds run on the output timeline, including empty clip intervals.
 		useEffect(() => {

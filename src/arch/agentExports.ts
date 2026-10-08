@@ -18,7 +18,9 @@ type Job = {
 };
 export function installAgentExports() {
 	let active: { id: string; exporter: NativeExporter | NativeGifExporter } | null = null;
+	const cancelledJobs = new Set<string>();
 	const cancelled = (_: unknown, id: string) => {
+		cancelledJobs.add(id);
 		if (active?.id === id) active.exporter.cancel();
 	};
 	const run = async (_: unknown, job: Job) => {
@@ -61,6 +63,7 @@ export function installAgentExports() {
 						})
 					: new NativeExporter(config);
 			active = { id: job.id, exporter };
+			if (cancelledJobs.has(job.id)) exporter.cancel();
 			const result = await exporter.export();
 			if (result.success && result.blob) {
 				const opened = await rpc("export-stream-open", { extension: "gif" });
@@ -82,15 +85,21 @@ export function installAgentExports() {
 				error: String(error),
 			}).catch(console.error);
 		} finally {
+			cancelledJobs.delete(job.id);
 			active = null;
 		}
 	};
 	ipcRenderer.on("arch-export-job", run);
 	ipcRenderer.on("arch-export-cancelled", cancelled);
 	void rpc("arch-renderer-ready");
+	const heartbeat = window.setInterval(() => {
+		void rpc("arch-renderer-ready").catch(console.error);
+	}, 5000);
 	return () => {
+		window.clearInterval(heartbeat);
 		ipcRenderer.removeListener("arch-export-job", run);
 		ipcRenderer.removeListener("arch-export-cancelled", cancelled);
 		active?.exporter.cancel();
+		void rpc("arch-renderer-ready", false).catch(() => {});
 	};
 }

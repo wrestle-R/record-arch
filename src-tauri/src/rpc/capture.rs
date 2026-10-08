@@ -16,6 +16,10 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
             crate::core::recording_segments::recover(Path::new(p))
         }),
         "arch-record-start" => string(a, 0).and_then(|source| {
+            anyhow::ensure!(
+                s.recorder.status()["recording"] != true,
+                "A recording is already active"
+            );
             if let Some(hide_windows) = &s.before_capture {
                 hide_windows()?;
             }
@@ -38,7 +42,18 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
             Ok(json!({"success":true,"session":s.session,"path":v["path"]}))
         }),
         "arch-record-pause" => s.recorder.pause(true),
-        "arch-record-resume" => s.recorder.pause(false),
+        "arch-record-resume" => (|| {
+            if s.recorder.paused {
+                if let Some(hide_windows) = &s.before_capture {
+                    hide_windows()?;
+                }
+            }
+            let result = s.recorder.pause(false);
+            if result.is_err() && s.recorder.status()["recording"] != true {
+                s.event("arch-show-recording-windows", json!([]));
+            }
+            result
+        })(),
         "select-source" => crate::core::files::set_setting("selectedSource", arg(a, 0).clone())
             .map(|_| json!({"success":true})),
         "get-selected-source" => Ok(crate::core::files::setting("selectedSource")),

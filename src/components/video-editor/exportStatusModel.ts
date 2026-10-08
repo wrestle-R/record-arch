@@ -120,7 +120,7 @@ function resolveRuntimeLabel(exportProgress: ExportProgress | null): string | nu
 	const rendererLabel =
 		renderBackend === "webgpu" ? "WebGPU" : renderBackend === "webgl" ? "WebGL" : null;
 	const encoderLabel =
-		encodeBackend === "ffmpeg" ? "Breeze" : encodeBackend === "webcodecs" ? "WebCodecs" : null;
+		encodeBackend === "ffmpeg" ? "FFmpeg" : encodeBackend === "webcodecs" ? "WebCodecs" : null;
 	const pathLabel =
 		rendererLabel && encoderLabel
 			? `${rendererLabel} + ${encoderLabel}`

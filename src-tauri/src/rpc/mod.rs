@@ -1,3 +1,4 @@
+mod background;
 pub mod capture;
 pub mod jobs;
 pub mod library;
@@ -9,6 +10,9 @@ use anyhow::Result;
 use serde_json::{json, Value};
 
 pub fn dispatch(state: &Shared, channel: &str, args: &[Value]) -> Result<Value> {
+    if let Some(result) = background::handle(state, channel, args) {
+        return result;
+    }
     let mut state = state
         .lock()
         .map_err(|_| anyhow::anyhow!("Application state unavailable"))?;

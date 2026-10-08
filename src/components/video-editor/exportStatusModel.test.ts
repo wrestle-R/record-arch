@@ -142,7 +142,7 @@ describe("resolveExportStatusModel", () => {
 			exportPipelineModel: "modern",
 		});
 
-		expect(status.runtimeLabel).toBe("WebGPU + Breeze (h264_nvenc)");
+		expect(status.runtimeLabel).toBe("WebGPU + FFmpeg (h264_nvenc)");
 	});
 
 	it("falls back to the encoder name when backend labels are unavailable", () => {

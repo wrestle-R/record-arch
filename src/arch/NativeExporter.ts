@@ -4,6 +4,7 @@ import type { VideoExporter } from "@/lib/exporter/videoExporter";
 import type { ExportResult } from "@/lib/exporter/types";
 import { rpc } from "@/desktop/transport";
 import { buildNativeTimeline } from "./nativeTimeline";
+import { beginNativeRender } from "./nativeRenderSession";
 type Config = ConstructorParameters<typeof VideoExporter>[0];
 export class NativeExporter {
 	private cancelled = false;
@@ -18,7 +19,10 @@ export class NativeExporter {
 		const config = this.config;
 		let renderer: FrameRenderer | null = null;
 		let audioPath: string | null = null;
+		let releaseRender: (() => void) | undefined;
 		try {
+			releaseRender = beginNativeRender();
+			await new Promise<void>((resolve) => setTimeout(resolve, 0));
 			const path = getLocalFilePath(config.videoUrl);
 			if (!path) throw new Error("Native export requires a local video.");
 			const probe = await rpc("probe-native-video-metadata", path);
@@ -171,6 +175,7 @@ export class NativeExporter {
 				await rpc("arch-encode-cancel", this.session).catch(() => {});
 				this.session = null;
 			}
+			releaseRender?.();
 		}
 	}
 }

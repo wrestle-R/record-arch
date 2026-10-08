@@ -4,6 +4,7 @@ use record_arch::rpc::server;
 use serde_json::{json, Value};
 #[derive(Subcommand)]
 pub enum ExportCommand {
+    List,
     Start {
         project: String,
         #[arg(long)]
@@ -28,6 +29,7 @@ pub enum ExportCommand {
 }
 pub fn run(command: &ExportCommand) -> Result<Value> {
     Ok(match command {
+        ExportCommand::List => server::call("arch-export-list", json!([]))?,
         ExportCommand::Start {
             project,
             output,

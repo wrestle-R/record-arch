@@ -13,6 +13,7 @@ pub struct Encoder {
     input: Option<ChildStdin>,
     pub path: PathBuf,
     pub frames: usize,
+    finished: bool,
 }
 impl Encoder {
     pub fn start(options: &Value) -> Result<Self> {
@@ -79,6 +80,7 @@ impl Encoder {
             input,
             path,
             frames: 0,
+            finished: false,
         })
     }
     pub fn write(&mut self, data: &[u8]) -> Result<()> {
@@ -129,6 +131,7 @@ impl Encoder {
             )?;
             fs::rename(muxed, &self.path)?;
         }
+        self.finished = true;
         Ok(
             json!({"success":true,"tempPath":self.path,"tempFilePath":self.path,"encoderName":"libx264","frames":self.frames}),
         )
@@ -140,6 +143,9 @@ impl Drop for Encoder {
         if self.child.try_wait().ok().flatten().is_none() {
             let _ = self.child.kill();
             let _ = self.child.wait();
+        }
+        if !self.finished {
+            let _ = fs::remove_file(&self.path);
         }
     }
 }

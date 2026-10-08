@@ -48,7 +48,7 @@ async fn command(
         return Ok(json!({"success":true}));
     }
     if channel == "arch-show-recording-windows" {
-        if let Some(w) = app.get_webview_window("main") {
+        for w in app.webview_windows().values() {
             let _ = w.show();
         }
         return Ok(json!({"success":true}));
@@ -144,9 +144,10 @@ pub fn run() {
                                 let _ = w.hide();
                             }
                         }
-                        "arch-open-editor"
-                        | "arch-recording-complete"
-                        | "arch-show-recording-windows" => {
+                        "arch-show-recording-windows" => {
+                            for w in handle.webview_windows().values() { let _ = w.show(); }
+                        }
+                        "arch-open-editor" | "arch-recording-complete" => {
                             if let Some(w) = handle.get_webview_window("main") {
                                 let _ = w.show();
                                 let _ = w.set_focus();
