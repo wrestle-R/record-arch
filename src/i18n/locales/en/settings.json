@@ -1,0 +1,262 @@
+{
+	"updates": {
+		"title": "Updates",
+		"experimental": "Experimental updates",
+		"experimentalDescription": "You've opted into experimental updates so you have the choice to test the latest update of Recordly before it's widely available.",
+		"saveFailed": "Failed to change the update channel."
+	},
+	"zoom": {
+		"level": "Zoom Level",
+		"selectRegion": "Select a zoom region to adjust",
+		"deleteZoom": "Delete Zoom",
+		"modeAuto": "Auto",
+		"modeManual": "Manual",
+		"modeManualDescription": "Set a fixed focus point for this zoom",
+		"modeAutoDescription": "Camera recenters when the cursor nears the edge of the zoomed view"
+	},
+	"trim": {
+		"deleteRegion": "Delete Trim Region"
+	},
+	"speed": {
+		"playbackSpeed": "Playback Speed",
+		"selectRegion": "Select a speed region to adjust",
+		"deleteRegion": "Delete Speed Region",
+		"label": "Speed"
+	},
+	"clip": {
+		"title": "Clip",
+		"mute": "Mute clip",
+		"resetAudioSettings": "Reset audio settings",
+		"mutedState": "Audio is muted",
+		"unmutedState": "Audio is playing",
+		"separateClipFromAudio": "Separate clip from audio",
+		"delete": "Delete Clip"
+	},
+	"effects": {
+		"title": "Video Effects",
+		"show": "Show",
+		"showCursor": "Show Cursor",
+		"loopCursor": "Loop cursor",
+		"cursorStyle": "Cursor Style",
+		"cursorStyleOptions": {
+			"macos": "macOS",
+			"tahoe": "Tahoe",
+			"tahoe-inverted": "Tahoe Inverted",
+			"windows11": "Windows 11",
+			"dot": "Dot",
+			"figma": "Minimal",
+			"lavender": "Lavender",
+			"parched": "Parched",
+			"chooper": "Chooper",
+			"amongus": "Among Us",
+			"turtle": "Turtle"
+		},
+		"backgroundBlur": "Blur",
+		"zoomMotionBlur": "Zoom Motion Blur",
+		"auto": "Auto",
+		"connectZooms": "Connect Zooms",
+		"connectZoomsDescription": "Smooth consecutive zoom regions into a continuous camera move.",
+		"autoApplyFreshRecordingZooms": "Auto-apply fresh recording zooms",
+		"autoApplyFreshRecordingZoomsDescription": "Suggest edge-recentering zooms automatically when you open a new recording.",
+		"zoomGeneralTitle": "General",
+		"zoomGeneralDescription": "Global motion settings for every zoom transition.",
+		"zoomInTitle": "Zoom In",
+		"zoomInDescription": "Control how the camera enters a zoom region.",
+		"zoomOutTitle": "Zoom Out",
+		"zoomOutDescription": "Control how the camera exits a zoom region.",
+		"connectedZoomTitle": "Between Zooms",
+		"connectedZoomDescription": "Tune the glide between consecutive zoom regions when connection is enabled.",
+		"motionPresetsTitle": "Motion Presets",
+		"motionPresetsZoomHint": "Zoom motion presets are available in Settings.",
+		"animationPresets": "Animation Presets",
+		"cursorMotionPresets": "Cursor Motion Presets",
+		"motionPresets": {
+			"focused": {
+				"label": "Focused",
+				"description": "Snappier motion for demos, walkthroughs, and everyday recordings."
+			},
+			"smooth": {
+				"label": "Smooth",
+				"description": "Gentler motion for presentations, keynote-style videos, and polished reveals."
+			}
+		},
+		"zoomInDuration": "Zoom In Duration",
+		"zoomInOverlap": "Zoom In Overlap",
+		"zoomOutDuration": "Zoom Out Duration",
+		"zoomInEasing": "Zoom In Curve",
+		"zoomOutEasing": "Zoom Out Curve",
+		"connectedZoomGap": "Connected Zoom Gap",
+		"connectedZoomDuration": "Connected Zoom Duration",
+		"connectedZoomEasing": "Connected Pan Curve",
+		"zoomEasingOptions": {
+			"recordly": "Recordly",
+			"glide": "Glide",
+			"smooth": "Smooth",
+			"snappy": "Snappy",
+			"linear": "Linear"
+		},
+		"cursorSize": "Cursor Size",
+		"cursorSmoothing": "Cursor Smoothing",
+		"cursorSpringStiffness": "Cursor Spring Stiffness",
+		"cursorSpringDamping": "Cursor Spring Damping",
+		"cursorSpringMass": "Cursor Spring Mass",
+		"off": "Off",
+		"cursorClickEffects": {
+			"title": "Click Effects",
+			"advanced": "Advanced",
+			"advancedShow": "Show advanced click effect controls",
+			"advancedHide": "Hide advanced click effect controls",
+			"color": "Effect Color",
+			"size": "Effect Size",
+			"opacity": "Effect Opacity",
+			"duration": "Effect Duration",
+			"none": {
+				"label": "Off",
+				"description": "No click graphic. Only the cursor motion changes when you click."
+			},
+			"ripple": {
+				"label": "Ripple",
+				"description": "Expanding rings radiate from each click so taps read clearly in motion."
+			},
+			"spotlight": {
+				"label": "Spotlight",
+				"description": "A soft halo flashes around the pointer to emphasize the clicked area."
+			},
+			"echo": {
+				"label": "Echo",
+				"description": "A pair of soft rings that spread outward with a cleaner pulse."
+			}
+		},
+		"cursorMotionBlur": "Cursor Motion Blur",
+		"cursorClickBounce": "Cursor Click Bounce",
+		"cursorClickBounceDuration": "Bounce Speed",
+		"cursorSway": "Cursor Sway",
+		"webcam": "Webcam Overlay",
+		"webcamFootage": "Webcam Footage",
+		"webcamFootageDescription": "No webcam footage linked to this video",
+		"uploadWebcamFootage": "Upload footage",
+		"replaceWebcamFootage": "Replace footage",
+		"removeWebcamFootage": "Remove footage",
+		"webcamFootageAdded": "Webcam footage linked",
+		"webcamFootageRemoved": "Webcam footage removed",
+		"webcamSize": "Webcam Size",
+		"webcamWidth": "Webcam Width",
+		"webcamHeight": "Webcam Height",
+		"webcamCrop": "Webcam Crop",
+		"webcamReactToZoom": "Webcam Reacts To Zoom",
+		"webcamMirror": "Mirror webcam",
+		"webcamRoundness": "Webcam Roundness",
+		"webcamShadow": "Webcam Shadow",
+		"shadow": "Shadow",
+		"radius": "Radius",
+		"roundness": "Roundness",
+		"padding": "Padding",
+		"paddingLinked": "Linked (Uniform)",
+		"paddingUnlinked": "Unlinked (Asymmetrical)",
+		"paddingTop": "Top",
+		"paddingBottom": "Bottom",
+		"paddingLeft": "Left",
+		"paddingRight": "Right",
+		"removeBackground": "Remove background"
+	},
+	"sections": {
+		"scene": "Scene",
+		"captions": "Captions",
+		"caption": "Caption",
+		"zoom": "Zoom",
+		"cursor": "Cursor",
+		"webcam": "Webcam",
+		"frame": "Frame",
+		"crop": "Crop"
+	},
+	"captions": {
+		"selectOnTimeline": "Select a caption on the timeline to edit it.",
+		"enabled": "Show",
+		"timelineQuickAdd": "Hover to add on timeline",
+		"language": "Language",
+		"downloading": "Downloading...",
+		"deleteModel": "Delete Model",
+		"clearModel": "Clear Model",
+		"downloadModel": "Download Model",
+		"generating": "Generating...",
+		"generateFull": "Generate Captions",
+		"regenerateFull": "Regenerate Captions",
+		"clearFull": "Clear Captions",
+		"fontSettings": "Font Settings",
+		"defaultFont": "Default",
+		"fontFamily": "Font",
+		"fontSize": "Font Size",
+		"rowCount": "Rows",
+		"animation": "Animation",
+		"animationOff": "Off",
+		"animationFade": "Fade",
+		"animationRise": "Rise",
+		"animationPop": "Pop",
+		"bottomOffset": "Bottom Offset",
+		"maxWidth": "Max Width",
+		"boxRadius": "Box Radius",
+		"backgroundOpacity": "Background Opacity",
+		"textColor": "Text Color",
+		"editor": {
+			"text": "Text",
+			"start": "Start",
+			"end": "End",
+			"split": "Split",
+			"merge": "Merge",
+			"delete": "Delete"
+		}
+	},
+	"crop": {
+		"title": "Crop Video",
+		"instruction": "Drag on each side to adjust the crop area",
+		"top": "Top",
+		"bottom": "Bottom",
+		"left": "Left",
+		"right": "Right",
+		"openEditor": "Open Crop Editor"
+	},
+	"background": {
+		"title": "Background",
+		"image": "Image",
+		"color": "Color",
+		"gradient": "Gradient",
+		"wallpaperPreview": "Wallpaper preview",
+		"uploadCustom": "Upload Custom",
+		"uploadSuccess": "Custom image uploaded successfully!",
+		"uploadError": "Please upload a JPG or JPEG image file.",
+		"uploadErrorDescription": "Only JPG and JPEG images are supported."
+	},
+	"export": {
+		"title": "Export",
+		"mp4": "MP4",
+		"gif": "GIF",
+		"quality": {
+			"low": "Low",
+			"medium": "Medium",
+			"high": "High",
+			"original": "Original"
+		},
+		"fpsTitle": "FPS",
+		"loop": "Loop",
+		"outputDimensions": "Output: {{dimensions}}px",
+		"sizePresetOriginalShort": "Orig",
+		"sizePresetMediumShort": "Med",
+		"sizePresetLargeShort": "Lar",
+		"loadProject": "Load Project",
+		"saveProject": "Save Project",
+		"exportVideo": "Export {{format}}",
+		"reportBug": "Report Bug",
+		"starOnGithub": "Star on GitHub"
+	},
+	"audio": {
+		"title": "Audio",
+		"volumeTitle": "Audio",
+		"volume": "Volume",
+		"normalize": "Normalize",
+		"sourceTracksTitle": "Clip Source Audio",
+		"systemLabel": "Source System",
+		"micLabel": "Source Mic",
+		"mixedLabel": "Source",
+		"deleteRegion": "Delete Audio"
+	}
+}

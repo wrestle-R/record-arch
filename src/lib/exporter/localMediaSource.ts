@@ -1,0 +1,134 @@
+import { getLocalMediaServerPath } from "../localMediaUrl";
+import { fromFileUrl, toFileUrl } from "@/components/video-editor/projectPersistence";
+
+const NOOP = () => undefined;
+const REMOTE_MEDIA_URL_PATTERN = /^(https?:|blob:|data:)/i;
+const BUNDLED_ASSET_PATH_PREFIXES = ["/wallpapers/", "/app-icons/"];
+
+export function isAbsoluteLocalPath(resource: string) {
+	return (
+		resource.startsWith("/") ||
+		/^[A-Za-z]:[\\/]/.test(resource) ||
+		/^\\\\[^\\]+\\[^\\]+/.test(resource)
+	);
+}
+
+function isBundledAssetPath(resource: string) {
+	return BUNDLED_ASSET_PATH_PREFIXES.some((prefix) => resource.startsWith(prefix));
+}
+
+export function isLocalMediaServerUrl(resource: string) {
+	return getLocalMediaServerPath(resource) !== null;
+}
+
+export function getLocalFilePath(resource: string) {
+	const localMediaServerPath = getLocalMediaServerPath(resource);
+	if (localMediaServerPath) {
+		return localMediaServerPath;
+	}
+
+	if (/^file:\/\//i.test(resource)) {
+		return fromFileUrl(resource);
+	}
+
+	if (isBundledAssetPath(resource)) {
+		return null;
+	}
+
+	return isAbsoluteLocalPath(resource) ? resource : null;
+}
+
+function isRemoteMediaResource(resource: string) {
+	return REMOTE_MEDIA_URL_PATTERN.test(resource) && !isLocalMediaServerUrl(resource);
+}
+
+export function getNormalizedMediaResourceUrl(resource: string) {
+	const localFilePath = getLocalFilePath(resource);
+	if (!localFilePath) {
+		return resource;
+	}
+
+	if (isLocalMediaServerUrl(resource)) {
+		return resource;
+	}
+
+	return /^file:\/\//i.test(resource) ? resource : toFileUrl(localFilePath);
+}
+
+function inferMimeType(filePath: string) {
+	const normalized = filePath.split("?")[0]?.toLowerCase() ?? filePath.toLowerCase();
+
+	if (normalized.endsWith(".mp4") || normalized.endsWith(".m4v")) return "video/mp4";
+	if (normalized.endsWith(".mov")) return "video/quicktime";
+	if (normalized.endsWith(".webm")) return "video/webm";
+	if (normalized.endsWith(".mkv")) return "video/x-matroska";
+	if (normalized.endsWith(".avi")) return "video/x-msvideo";
+	if (normalized.endsWith(".mp3")) return "audio/mpeg";
+	if (normalized.endsWith(".wav")) return "audio/wav";
+	if (normalized.endsWith(".m4a")) return "audio/mp4";
+	if (normalized.endsWith(".aac")) return "audio/aac";
+	if (normalized.endsWith(".ogg")) return "audio/ogg";
+	if (normalized.endsWith(".opus")) return "audio/ogg;codecs=opus";
+	if (normalized.endsWith(".flac")) return "audio/flac";
+
+	return "application/octet-stream";
+}
+
+export async function resolveMediaResourceUrl(resource: string): Promise<string> {
+	const localFilePath = getLocalFilePath(resource);
+	if (!localFilePath) {
+		return resource;
+	}
+
+	if (typeof window !== "undefined" && window.electronAPI?.getLocalMediaUrl) {
+		try {
+			const result = await window.electronAPI.getLocalMediaUrl(localFilePath);
+			if (result.success) {
+				return result.url;
+			}
+		} catch {
+			// Preserve an existing media URL if refreshing the server URL fails.
+		}
+	}
+
+	return /^file:\/\//i.test(resource) || isLocalMediaServerUrl(resource)
+		? resource
+		: toFileUrl(localFilePath);
+}
+
+async function createReadableMediaResourceFile(resource: string): Promise<File> {
+	const filename = resource.split(/[\\/]/).pop()?.split("?")[0] || "media";
+	const resourceUrl = await resolveMediaResourceUrl(resource);
+	const response = await fetch(resourceUrl);
+	if (!response.ok) {
+		throw new Error(`Failed to load media resource: ${response.status} ${response.statusText}`);
+	}
+
+	const blob = await response.blob();
+	return new File([blob], filename, { type: blob.type || inferMimeType(filename) });
+}
+
+export async function createFallbackDemuxerSource(resource: string): Promise<string | File> {
+	// Local media already has a random-access transport: WebDemuxer issues bounded
+	// byte-range requests against this URL. Converting it to a File would copy the
+	// complete recording through Electron IPC and make memory use scale with file size.
+	if (getLocalFilePath(resource)) {
+		return resolveMediaResourceUrl(resource);
+	}
+
+	return createReadableMediaResourceFile(resource);
+}
+
+export async function resolveMediaElementSource(resource: string): Promise<{
+	src: string;
+	revoke: () => void;
+}> {
+	if (!resource || isRemoteMediaResource(resource)) {
+		return { src: resource, revoke: NOOP };
+	}
+
+	return {
+		src: await resolveMediaResourceUrl(resource),
+		revoke: NOOP,
+	};
+}

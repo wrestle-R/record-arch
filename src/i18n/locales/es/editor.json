@@ -1,0 +1,199 @@
+{
+	"cloud": {
+		"signInRequired": "Inicia sesión en Recordly antes de crear un enlace compartido.",
+		"prepareFailed": "No se pudo preparar la edición actual para compartirla.",
+		"uploadFailed": "Error al subir a la nube.",
+		"linkCreated": "Enlace creado",
+		"linkCopied": "Enlace copiado",
+		"copyFailed": "No se pudo copiar el enlace. Selecciónalo y cópialo manualmente.",
+		"copied": "Copiado",
+		"copy": "Copiar",
+		"preparing": "Preparando la edición actual…",
+		"createLink": "Crear enlace",
+		"heading": "Compartir en la nube",
+		"ready": "Tu vídeo está listo para compartir.",
+		"openPage": "Abrir página compartida",
+		"notes": "Notas",
+		"publish": "Publicar y crear enlace",
+		"createLinkTitle": "Crear un enlace para compartir",
+		"notesPlaceholder": "Añade contexto, instrucciones o un breve resumen para los espectadores…",
+		"description": "Publica la edición actual en una página de Recordly para verla y comentarla. No es necesario descargarla. Los vídeos se preparan con una resolución de hasta 1080p.",
+		"uploading": "Subiendo… {progress}%",
+		"googleUnavailable": "El inicio de sesión con Google aún no está habilitado. Usa el correo o pide al administrador de Recordly que conecte Google.",
+		"xUnavailable": "El inicio de sesión con X aún no está habilitado. Usa el correo o pide al administrador de Recordly que conecte X.",
+		"providerUnavailable": "Este método de inicio de sesión aún no está habilitado. Usa el correo.",
+		"enterEmail": "Introduce primero tu dirección de correo.",
+		"resetSent": "Correo para restablecer la contraseña enviado.",
+		"accountHeading": "Tu cuenta de Recordly",
+		"signInHeading": "Iniciar sesión en Recordly",
+		"signInShareDescription": "Inicia sesión para publicar este vídeo y gestionar su enlace compartido.",
+		"signInDescription": "Accede a tus grabaciones y enlaces compartidos.",
+		"signingOut": "Cerrando sesión…",
+		"signOut": "Cerrar sesión",
+		"signingIn": "Iniciando sesión…",
+		"signIn": "Iniciar sesión",
+		"or": "o",
+		"email": "Correo electrónico",
+		"password": "Contraseña",
+		"forgotPassword": "¿Olvidaste la contraseña?",
+		"unavailable": "El inicio de sesión en la nube aún no está disponible en esta versión. Puedes guardar vídeos en tu ordenador.",
+		"createShareLink": "Crear enlace compartido",
+		"done": "Listo",
+		"addingVideo": "Añadiendo vídeo…",
+		"preparingFootage": "Preparando vídeo y audio para la línea de tiempo."
+	},
+	"library": {
+		"videos": "Vídeos"
+	},
+	"playback": {
+		"play": "Reproducir",
+		"pause": "Pausar",
+		"skipBack": "Retroceder",
+		"skipForward": "Avanzar",
+		"muteUnmute": "Silenciar/activar sonido",
+		"volume": "Volumen de vista previa"
+	},
+	"annotations": {
+		"settings": "Configuración de anotaciones",
+		"active": "Activo",
+		"text": "Texto",
+		"image": "Imagen",
+		"arrow": "Flecha",
+		"blur": "Desenfoque",
+		"textContent": "Contenido de texto",
+		"textPlaceholder": "Ingresa tu texto...",
+		"fontStyle": "Estilo de fuente",
+		"selectStyle": "Seleccionar estilo",
+		"size": "Tamaño",
+		"toggleBold": "Alternar negrita",
+		"toggleItalic": "Alternar cursiva",
+		"toggleUnderline": "Alternar subrayado",
+		"alignLeft": "Alinear a la izquierda",
+		"alignCenter": "Alinear al centro",
+		"alignRight": "Alinear a la derecha",
+		"textColor": "Color de texto",
+		"background": "Fondo",
+		"none": "Ninguno",
+		"clearBackground": "Borrar fondo",
+		"uploadImage": "Subir imagen",
+		"supportedFormats": "Formatos compatibles: JPG, PNG, GIF, WebP",
+		"arrowDirection": "Dirección de flecha",
+		"strokeWidth": "Ancho de trazo: {{width}}px",
+		"arrowColor": "Color de flecha",
+		"deleteAnnotation": "Eliminar anotación",
+		"shortcutsAndTips": "Atajos y consejos",
+		"tipSelectAnnotation": "Mueve el cabezal de reproducción a la sección de anotación superpuesta y selecciona un elemento.",
+		"tipCycleForward": "Usa Tab para recorrer los elementos superpuestos.",
+		"tipCycleBackward": "Usa Shift+Tab para recorrer hacia atrás.",
+		"imageUploadSuccess": "¡Imagen subida exitosamente!",
+		"imageUploadError": "Por favor sube un archivo de imagen JPG, PNG, GIF o WebP.",
+		"blurStrength": "Fuerza del Desenfoque: {{strength}}",
+		"solidColor": "Color Sólido (Censura)",
+		"borderRadius": "Radio del Borde"
+	},
+
+	"fontStyles": {
+		"classic": "Clásico",
+		"editor": "Editor",
+		"strong": "Fuerte",
+		"typewriter": "Máquina de escribir",
+		"deco": "Deco",
+		"simple": "Simple",
+		"modern": "Moderno",
+		"clean": "Limpio"
+	},
+	"format": {
+		"mp4Video": "Video MP4",
+		"mp4Description": "Archivo de video de alta calidad",
+		"gifAnimation": "Animación GIF",
+		"gifDescription": "Imagen animada para compartir"
+	},
+	"gifOptions": {
+		"frameRate": "Velocidad de cuadros",
+		"outputSize": "Tamaño de salida",
+		"outputDimensions": "Salida: {{width}} × {{height}}px",
+		"loopAnimation": "Animación en bucle",
+		"loopDescription": "El GIF se reproducirá continuamente"
+	},
+	"tutorial": {
+		"howTrimmingWorks": "Cómo funciona el recorte",
+		"title": "Cómo Funciona el Recorte",
+		"understanding": "Comprende cómo eliminar las partes no deseadas de tu video.",
+		"descriptionP1": "La herramienta de recorte funciona definiendo los segmentos que deseas",
+		"descriptionRemove": "eliminar",
+		"descriptionP2": "de tu video.",
+		"descriptionP3": "Cualquier parte de la línea de tiempo cubierta por un segmento de recorte rojo será eliminada al exportar.",
+		"visualExample": "Ejemplo visual",
+		"removed": "ELIMINADO",
+		"kept": "Conservado",
+		"finalVideo": "Video final",
+		"part": "Parte {{number}}",
+		"addTrimStep": "1. Agregar recorte",
+		"addTrimDesc": "Presiona T o haz clic en el ícono de tijeras para marcar una sección para eliminar.",
+		"adjustStep": "2. Ajustar",
+		"adjustDesc": "Arrastra los bordes de la región roja para cubrir exactamente lo que deseas eliminar."
+	},
+	"feedback": {
+		"trigger": "Comentarios",
+		"title": "Comentarios y contacto",
+		"description": "Contáctanos directamente o abre un issue si algo falla o falta.",
+		"emailLabel": "Correo",
+		"xLabel": "X",
+		"reportIssue": "Reportar problema / enviar comentarios",
+		"openFailed": "No se pudo abrir el enlace."
+	},
+	"keyboardShortcuts": {
+		"trigger": "Atajos",
+		"title": "Atajos de teclado",
+		"description": "Referencia rápida para los controles de la línea de tiempo y del editor.",
+		"customizeTooltip": "Personalizar atajos",
+		"customize": "Personalizar",
+		"panTimeline": "Desplazar línea de tiempo",
+		"zoomTimeline": "Zoom en línea de tiempo",
+		"cycleAnnotations": "Recorrer anotaciones",
+		"tab": "Tab"
+	},
+	"actions": {
+		"saveAgain": "Guardar de nuevo",
+		"showInFolder": "Mostrar en carpeta"
+	},
+	"project": {
+		"untitled": "Sin título",
+		"unsavedChangesTitle": "Cambios sin guardar",
+		"unsavedChangesDescription": "¿Quieres guardar el proyecto actual antes de {{action}}?",
+		"discardChanges": "Descartar cambios",
+		"saveProject": "Guardar proyecto"
+	},
+	"exportTips": {
+		"autoZooms": "Consejo: Desactiva los zooms automáticos en la configuración",
+		"experimentalBuilds": "Consejo: Activa el acceso a versiones experimentales en la configuración",
+		"cursorAppearance": "Consejo: Puedes personalizar la apariencia del cursor"
+	},
+	"account": { "title": "Cuenta", "comingSoon": "Cuenta próximamente" },
+	"nativeCaptureUnavailable": {
+		"title": "Nada está roto, pero no podremos renderizar una superposición de cursor animada.",
+		"description": "Tu dispositivo no es compatible con la captura nativa. Esto puede deberse a varias razones que todavía no hemos identificado. Recordly seguirá funcionando, pero hará imposible el suavizado del cursor.",
+		"confirm": "Entendido"
+	},
+	"exportStatus": {
+		"exporting": "Exportando",
+		"renderingFile": "Renderizando tu archivo.",
+		"preparing": "Preparando exportación...",
+		"completePercent": "{{percent}}% completado",
+		"issue": "Problema de exportación",
+		"complete": "Exportación completada",
+		"savedSuccessfully": "Tu archivo se guardó correctamente."
+	},
+	"export": {
+		"processingAudioEdits": "Procesando audio con ediciones de velocidad/superposición"
+	},
+	"toolbar": {
+		"addLayer": "Agregar capa",
+		"splitClip": "Dividir clip (C)"
+	},
+	"timeline": {
+		"expand": "Expandir línea de tiempo",
+		"collapse": "Contraer línea de tiempo"
+	},
+	"openRecordingsFolder": "Abrir carpeta de grabaciones"
+}

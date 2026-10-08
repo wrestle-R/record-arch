@@ -1,0 +1,200 @@
+{
+	"cloud": {
+		"signInRequired": "Meld je aan bij Recordly voordat je een deellink maakt.",
+		"prepareFailed": "De huidige montage kon niet worden voorbereid om te delen.",
+		"uploadFailed": "Uploaden naar de cloud mislukt.",
+		"linkCreated": "Deellink gemaakt",
+		"linkCopied": "Link gekopieerd",
+		"copyFailed": "De link kon niet worden gekopieerd. Selecteer en kopieer deze handmatig.",
+		"copied": "Gekopieerd",
+		"copy": "Kopiëren",
+		"preparing": "Huidige montage voorbereiden…",
+		"createLink": "Link maken",
+		"heading": "Delen in de cloud",
+		"ready": "Je video is klaar om te delen.",
+		"openPage": "Deelpagina openen",
+		"notes": "Notities",
+		"publish": "Publiceren en link maken",
+		"createLinkTitle": "Een deellink maken",
+		"notesPlaceholder": "Voeg context, instructies of een korte samenvatting voor kijkers toe…",
+		"description": "Publiceer de huidige montage op een Recordly-pagina om te bekijken en feedback te geven. Downloaden is niet nodig. Video’s worden voorbereid tot 1080p.",
+		"uploading": "Uploaden… {progress}%",
+		"googleUnavailable": "Aanmelden met Google is nog niet ingeschakeld. Gebruik e-mail of vraag je Recordly-beheerder om Google te koppelen.",
+		"xUnavailable": "Aanmelden met X is nog niet ingeschakeld. Gebruik e-mail of vraag je Recordly-beheerder om X te koppelen.",
+		"providerUnavailable": "Deze aanmeldmethode is nog niet ingeschakeld. Gebruik voorlopig e-mail.",
+		"enterEmail": "Voer eerst je e-mailadres in.",
+		"resetSent": "E-mail om je wachtwoord te herstellen verzonden.",
+		"accountHeading": "Je Recordly-account",
+		"signInHeading": "Aanmelden bij Recordly",
+		"signInShareDescription": "Meld je aan om deze video te publiceren en de deellink te beheren.",
+		"signInDescription": "Bekijk je opnamen en gedeelde links.",
+		"signingOut": "Afmelden…",
+		"signOut": "Afmelden",
+		"signingIn": "Aanmelden…",
+		"signIn": "Aanmelden",
+		"or": "of",
+		"email": "E-mail",
+		"password": "Wachtwoord",
+		"forgotPassword": "Wachtwoord vergeten?",
+		"unavailable": "Aanmelden bij de cloud is nog niet beschikbaar in deze versie. Je kunt video’s wel op je computer opslaan.",
+		"createShareLink": "Deellink maken",
+		"done": "Gereed",
+		"addingVideo": "Video toevoegen…",
+		"preparingFootage": "Video en audio voorbereiden voor je tijdlijn."
+	},
+	"library": {
+		"videos": "Video’s"
+	},
+	"playback": {
+		"play": "Afspelen",
+		"pause": "Pauzeren",
+		"skipBack": "Terug springen",
+		"skipForward": "Vooruit springen",
+		"muteUnmute": "Dempen/dempen opheffen",
+		"volume": "Voorbeeldvolume"
+	},
+	"annotations": {
+		"settings": "Annotatie-instellingen",
+		"active": "Actief",
+		"text": "Tekst",
+		"image": "Afbeelding",
+		"arrow": "Pijl",
+		"blur": "Vervagen",
+		"textContent": "Tekstinhoud",
+
+		"textPlaceholder": "Voer je tekst in...",
+		"fontStyle": "Lettertype",
+		"selectStyle": "Selecteer stijl",
+		"size": "Grootte",
+		"toggleBold": "Vet aan/uit",
+		"toggleItalic": "Cursief aan/uit",
+		"toggleUnderline": "Onderstrepen aan/uit",
+		"alignLeft": "Links uitlijnen",
+		"alignCenter": "Centreren",
+		"alignRight": "Rechts uitlijnen",
+		"textColor": "Tekstkleur",
+		"background": "Achtergrond",
+		"none": "Geen",
+		"clearBackground": "Achtergrond wissen",
+		"uploadImage": "Afbeelding uploaden",
+		"supportedFormats": "Ondersteunde formaten: JPG, PNG, GIF, WebP",
+		"arrowDirection": "Pijlrichting",
+		"strokeWidth": "Lijndikte: {{width}}px",
+		"arrowColor": "Pijlkleur",
+		"deleteAnnotation": "Annotatie verwijderen",
+		"shortcutsAndTips": "Sneltoetsen & tips",
+		"tipSelectAnnotation": "Verplaats de afspeelkop naar een overlappend annotatiegedeelte en selecteer een item.",
+		"tipCycleForward": "Gebruik Tab om door overlappende items te bladeren.",
+		"tipCycleBackward": "Gebruik Shift+Tab om terug te bladeren.",
+		"imageUploadSuccess": "Afbeelding succesvol geüpload!",
+		"imageUploadError": "Upload een JPG-, PNG-, GIF- of WebP-afbeelding.",
+		"blurStrength": "Vervagingssterkte: {{strength}}",
+		"solidColor": "Effen Kleur (Censuur)",
+		"borderRadius": "Hoekradius"
+	},
+
+	"fontStyles": {
+		"classic": "Klassiek",
+		"editor": "Editor",
+		"strong": "Sterk",
+		"typewriter": "Typemachine",
+		"deco": "Deco",
+		"simple": "Simpel",
+		"modern": "Modern",
+		"clean": "Schoon"
+	},
+	"format": {
+		"mp4Video": "MP4-video",
+		"mp4Description": "Videobestand van hoge kwaliteit",
+		"gifAnimation": "GIF-animatie",
+		"gifDescription": "Geanimeerde afbeelding om te delen"
+	},
+	"gifOptions": {
+		"frameRate": "Framesnelheid",
+		"outputSize": "Uitvoergrootte",
+		"outputDimensions": "Uitvoer: {{width}} × {{height}}px",
+		"loopAnimation": "Animatie herhalen",
+		"loopDescription": "GIF wordt continu afgespeeld"
+	},
+	"tutorial": {
+		"howTrimmingWorks": "Hoe trimmen werkt",
+		"title": "Hoe trimmen werkt",
+		"understanding": "Leer hoe je ongewenste delen uit je video knipt.",
+		"descriptionP1": "Het trimgereedschap werkt door de segmenten te definiëren die je wilt",
+		"descriptionRemove": "verwijderen",
+		"descriptionP2": "uit je video.",
+		"descriptionP3": "Elk deel van de tijdlijn dat bedekt is door een rood trimsegment wordt weggeknipt bij het exporteren.",
+		"visualExample": "Visueel voorbeeld",
+		"removed": "VERWIJDERD",
+		"kept": "Behouden",
+		"finalVideo": "Eindvideo",
+		"part": "Deel {{number}}",
+		"addTrimStep": "1. Trim toevoegen",
+		"addTrimDesc": "Druk op T of klik op het schaarpictogram om een sectie te markeren voor verwijdering.",
+		"adjustStep": "2. Aanpassen",
+		"adjustDesc": "Sleep de randen van het rode gebied om precies te bepalen wat je wilt wegknippen."
+	},
+	"feedback": {
+		"trigger": "Feedback",
+		"title": "Feedback & contact",
+		"description": "Neem rechtstreeks contact op of maak een issue aan als er iets kapot of ontbrekend is.",
+		"emailLabel": "E-mail",
+		"xLabel": "X",
+		"reportIssue": "Issue melden / feedback sturen",
+		"openFailed": "Kan link niet openen."
+	},
+	"keyboardShortcuts": {
+		"trigger": "Sneltoetsen",
+		"title": "Sneltoetsen",
+		"description": "Snelreferentie voor de tijdlijn- en editorbesturing.",
+		"customizeTooltip": "Sneltoetsen aanpassen",
+		"customize": "Aanpassen",
+		"panTimeline": "Tijdlijn verschuiven",
+		"zoomTimeline": "Tijdlijn zoomen",
+		"cycleAnnotations": "Annotaties doorlopen",
+		"tab": "Tab"
+	},
+	"actions": {
+		"saveAgain": "Opnieuw opslaan",
+		"showInFolder": "Tonen in map"
+	},
+	"project": {
+		"untitled": "Naamloos",
+		"unsavedChangesTitle": "Niet-opgeslagen wijzigingen",
+		"unsavedChangesDescription": "Wil je het huidige project opslaan voordat je {{action}}?",
+		"discardChanges": "Wijzigingen negeren",
+		"saveProject": "Project opslaan"
+	},
+	"exportTips": {
+		"autoZooms": "Tip: Schakel automatisch toegepaste zooms uit in de instellingen",
+		"experimentalBuilds": "Tip: Schakel toegang tot experimentele builds in via de instellingen",
+		"cursorAppearance": "Tip: Je kunt het uiterlijk van je cursor aanpassen"
+	},
+	"account": { "title": "Account", "comingSoon": "Account binnenkort beschikbaar" },
+	"nativeCaptureUnavailable": {
+		"title": "Er is niets kapot, maar we kunnen geen geanimeerde cursor-overlay renderen.",
+		"description": "Je apparaat ondersteunt geen native capture. Dit kan verschillende oorzaken hebben die we nog niet hebben achterhaald. Recordly blijft werken, maar cursor smoothing is dan niet mogelijk.",
+		"confirm": "Oké"
+	},
+	"exportStatus": {
+		"exporting": "Exporteren",
+		"renderingFile": "Je bestand wordt gerenderd.",
+		"preparing": "Export voorbereiden...",
+		"completePercent": "{{percent}}% voltooid",
+		"issue": "Exportprobleem",
+		"complete": "Export voltooid",
+		"savedSuccessfully": "Je bestand is succesvol opgeslagen."
+	},
+	"export": {
+		"processingAudioEdits": "Audio verwerken met snelheids-/overlay-bewerkingen"
+	},
+	"toolbar": {
+		"addLayer": "Laag toevoegen",
+		"splitClip": "Clip splitsen (C)"
+	},
+	"timeline": {
+		"expand": "Tijdlijn uitvouwen",
+		"collapse": "Tijdlijn samenvouwen"
+	},
+	"openRecordingsFolder": "Opnamemap openen"
+}

@@ -1,0 +1,262 @@
+{
+	"zoom": {
+		"level": "Zoomniveau",
+		"selectRegion": "Selecteer een zoomgebied om aan te passen",
+		"deleteZoom": "Zoom verwijderen",
+		"modeAuto": "Auto",
+		"modeManual": "Handmatig",
+		"modeManualDescription": "Stel een vast focuspunt in voor deze zoom",
+		"modeAutoDescription": "De camera volgt de cursor automatisch"
+	},
+	"trim": {
+		"deleteRegion": "Trimgebied verwijderen"
+	},
+	"speed": {
+		"playbackSpeed": "Afspeelsnelheid",
+		"selectRegion": "Selecteer een snelheidsgebied om aan te passen",
+		"deleteRegion": "Snelheidsgebied verwijderen",
+		"label": "Snelheid"
+	},
+	"clip": {
+		"title": "Clip",
+		"mute": "Clip dempen",
+		"resetAudioSettings": "Audio-instellingen resetten",
+		"mutedState": "Audio is gedempt",
+		"unmutedState": "Audio wordt afgespeeld",
+		"separateClipFromAudio": "Clip van audio scheiden",
+		"delete": "Clip verwijderen"
+	},
+	"effects": {
+		"title": "Video-effecten",
+		"show": "Tonen",
+		"showCursor": "Cursor tonen",
+		"loopCursor": "Cursor herhalen",
+		"cursorStyle": "Cursorstijl",
+		"cursorStyleOptions": {
+			"macos": "macOS",
+			"tahoe": "Tahoe",
+			"tahoe-inverted": "Tahoe omgekeerd",
+			"windows11": "Windows 11",
+			"dot": "Punt",
+			"figma": "Minimaal",
+			"lavender": "Lavendel",
+			"parched": "Parched",
+			"chooper": "Chooper",
+			"amongus": "Among Us",
+			"turtle": "Schildpad"
+		},
+		"backgroundBlur": "Vervaging",
+		"zoomMotionBlur": "Zoom-bewegingsonscherpte",
+		"auto": "Auto",
+		"connectZooms": "Zooms verbinden",
+		"connectZoomsDescription": "Maak opeenvolgende zoomgebieden vloeiend tot een doorlopende camerabeweging.",
+		"autoApplyFreshRecordingZooms": "Zooms voor nieuwe opnames automatisch toepassen",
+		"autoApplyFreshRecordingZoomsDescription": "Stel automatisch cursor-volgende zooms voor wanneer je een nieuwe opname opent.",
+		"zoomGeneralTitle": "Algemeen",
+		"zoomGeneralDescription": "Globale bewegingsinstellingen voor elke zoomovergang.",
+		"zoomInTitle": "Inzoomen",
+		"zoomInDescription": "Bepaal hoe de camera een zoomgebied binnengaat.",
+		"zoomOutTitle": "Uitzoomen",
+		"zoomOutDescription": "Bepaal hoe de camera een zoomgebied verlaat.",
+		"connectedZoomTitle": "Tussen zooms",
+		"connectedZoomDescription": "Stel de overgang af tussen opeenvolgende zoomgebieden wanneer verbinding is ingeschakeld.",
+		"motionPresetsTitle": "Motion Presets",
+		"motionPresetsZoomHint": "Zoom motion presets are available in Settings.",
+		"animationPresets": "Animation Presets",
+		"cursorMotionPresets": "Cursor Motion Presets",
+		"motionPresets": {
+			"focused": {
+				"label": "Focused",
+				"description": "Snappier motion for demos, walkthroughs, and everyday recordings."
+			},
+			"smooth": {
+				"label": "Smooth",
+				"description": "Gentler motion for presentations, keynote-style videos, and polished reveals."
+			}
+		},
+		"zoomInDuration": "Inzoomduur",
+		"zoomInOverlap": "Inzoomoverlap",
+		"zoomOutDuration": "Uitzoomduur",
+		"zoomInEasing": "Inzoomcurve",
+		"zoomOutEasing": "Uitzoomcurve",
+		"connectedZoomGap": "Verbonden zoomtussenpauze",
+		"connectedZoomDuration": "Verbonden zoomduur",
+		"connectedZoomEasing": "Verbonden pancurve",
+		"zoomEasingOptions": {
+			"recordly": "Recordly",
+			"glide": "Glijden",
+			"smooth": "Vloeiend",
+			"snappy": "Pittig",
+			"linear": "Lineair"
+		},
+		"cursorSize": "Cursorgrootte",
+		"cursorSmoothing": "Cursorverzachting",
+		"cursorSpringStiffness": "Cursor Spring Stiffness",
+		"cursorSpringDamping": "Cursor Spring Damping",
+		"cursorSpringMass": "Cursor Spring Mass",
+		"off": "Uit",
+		"cursorClickEffects": {
+			"title": "Click Effects",
+			"advanced": "Advanced",
+			"advancedShow": "Show advanced click effect controls",
+			"advancedHide": "Hide advanced click effect controls",
+			"color": "Effect Color",
+			"size": "Effect Size",
+			"opacity": "Effect Opacity",
+			"duration": "Effect Duration",
+			"none": {
+				"label": "Off",
+				"description": "No click graphic. Only the cursor motion changes when you click."
+			},
+			"ripple": {
+				"label": "Ripple",
+				"description": "Expanding rings radiate from each click so taps read clearly in motion."
+			},
+			"spotlight": {
+				"label": "Spotlight",
+				"description": "A soft halo flashes around the pointer to emphasize the clicked area."
+			},
+			"echo": {
+				"label": "Echo",
+				"description": "A pair of soft rings that spread outward with a cleaner pulse."
+			}
+		},
+		"cursorMotionBlur": "Cursor-bewegingsonscherpte",
+		"cursorClickBounce": "Cursorklikstuit",
+		"cursorClickBounceDuration": "Stuitsnelheid",
+		"cursorSway": "Cursorbeweging",
+		"webcam": "Webcam-overlay",
+		"webcamFootage": "Webcambeelden",
+		"webcamFootageDescription": "Geen webcambeelden gekoppeld aan deze video",
+		"uploadWebcamFootage": "Beelden uploaden",
+		"replaceWebcamFootage": "Beelden vervangen",
+		"removeWebcamFootage": "Beelden verwijderen",
+		"webcamFootageAdded": "Webcambeelden gekoppeld",
+		"webcamFootageRemoved": "Webcambeelden verwijderd",
+		"webcamSize": "Webcamgrootte",
+		"webcamWidth": "Webcambreedte",
+		"webcamHeight": "Webcamhoogte",
+		"webcamCrop": "Webcam bijsnijden",
+		"webcamReactToZoom": "Webcam reageert op zoom",
+		"webcamMirror": "Webcam spiegelen",
+		"webcamRoundness": "Webcam-afronding",
+		"webcamShadow": "Webcamschaduw",
+		"shadow": "Schaduw",
+		"radius": "Straal",
+		"roundness": "Afronding",
+		"padding": "Opvulling",
+		"paddingLinked": "Gekoppeld (uniform)",
+		"paddingUnlinked": "Ontkoppeld (asymmetrisch)",
+		"paddingTop": "Boven",
+		"paddingBottom": "Onder",
+		"paddingLeft": "Links",
+		"paddingRight": "Rechts",
+		"removeBackground": "Achtergrond verwijderen"
+	},
+	"sections": {
+		"scene": "Scène",
+		"captions": "Ondertiteling",
+		"caption": "Ondertitel",
+		"zoom": "Zoom",
+		"cursor": "Cursor",
+		"webcam": "Webcam",
+		"frame": "Kader",
+		"crop": "Bijsnijden"
+	},
+	"captions": {
+		"selectOnTimeline": "Selecteer een ondertitel op de tijdlijn om deze te bewerken.",
+		"enabled": "Tonen",
+		"timelineQuickAdd": "Aanwijzen om toe te voegen op tijdlijn",
+		"language": "Taal",
+		"downloading": "Downloaden...",
+		"deleteModel": "Model verwijderen",
+		"clearModel": "Model wissen",
+		"downloadModel": "Model downloaden",
+		"generating": "Genereren...",
+		"generateFull": "Ondertiteling genereren",
+		"regenerateFull": "Ondertiteling opnieuw genereren",
+		"clearFull": "Ondertiteling wissen",
+		"fontSettings": "Lettertype-instellingen",
+		"defaultFont": "Standaard",
+		"fontFamily": "Lettertype",
+		"fontSize": "Lettergrootte",
+		"rowCount": "Rijen",
+		"animation": "Animatie",
+		"animationOff": "Uit",
+		"animationFade": "Vervagen",
+		"animationRise": "Opstijgen",
+		"animationPop": "Pop",
+		"bottomOffset": "Onderste afstand",
+		"maxWidth": "Maximale breedte",
+		"boxRadius": "Vakstraal",
+		"backgroundOpacity": "Achtergrond-dekking",
+		"textColor": "Tekstkleur",
+		"editor": {
+			"text": "Text",
+			"start": "Start",
+			"end": "End",
+			"split": "Split",
+			"merge": "Merge",
+			"delete": "Delete"
+		}
+	},
+	"crop": {
+		"title": "Video bijsnijden",
+		"instruction": "Sleep aan elke zijde om het bijsnijgebied aan te passen",
+		"top": "Boven",
+		"bottom": "Onder",
+		"left": "Links",
+		"right": "Rechts",
+		"openEditor": "Bijsnijdeditor openen"
+	},
+	"background": {
+		"title": "Achtergrond",
+		"image": "Afbeelding",
+		"color": "Kleur",
+		"gradient": "Verloop",
+		"wallpaperPreview": "Achtergrondvoorbeeld",
+		"uploadCustom": "Afbeelding uploaden",
+		"uploadSuccess": "Eigen afbeelding succesvol geüpload!",
+		"uploadError": "Upload een JPG- of JPEG-afbeelding.",
+		"uploadErrorDescription": "Alleen JPG- en JPEG-afbeeldingen worden ondersteund."
+	},
+	"export": {
+		"title": "Exporteren",
+		"mp4": "MP4",
+		"gif": "GIF",
+		"quality": {
+			"low": "Laag",
+			"medium": "Gemiddeld",
+			"high": "Hoog",
+			"original": "Origineel"
+		},
+		"fpsTitle": "FPS",
+		"loop": "Herhalen",
+		"outputDimensions": "Uitvoer: {{dimensions}}px",
+		"sizePresetOriginalShort": "Orig",
+		"sizePresetMediumShort": "Gem",
+		"sizePresetLargeShort": "Grt",
+		"loadProject": "Project laden",
+		"saveProject": "Project opslaan",
+		"exportVideo": "{{format}} exporteren",
+		"reportBug": "Bug melden",
+		"starOnGithub": "Ster op GitHub"
+	},
+	"audio": {
+		"title": "Audio",
+		"volumeTitle": "Audio",
+		"volume": "Volume",
+		"normalize": "Normaliseren",
+		"sourceTracksTitle": "Bronaudio clip",
+		"systemLabel": "Systeemaudio",
+		"micLabel": "Microfoon",
+		"mixedLabel": "Bron",
+		"deleteRegion": "Audio verwijderen"
+	},
+	"updates": {
+		"experimentalDescription": "Je hebt experimentele updates ingeschakeld, dus je kunt de nieuwste update van Recordly testen voordat die breed beschikbaar is.",
+		"title": "Updates",
+		"experimental": "Experimentele updates",
+		"saveFailed": "Kan het updatekanaal niet wijzigen."
+	}
+}

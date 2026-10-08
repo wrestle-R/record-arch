@@ -1,0 +1,214 @@
+@import "tailwindcss";
+@import "@heroui/styles";
+@plugin "tailwindcss-animate";
+@custom-variant dark (&:where(.dark, .dark *));
+@source "../index.html";
+
+/* DM Sans is bundled for consistent typography and offline desktop use. */
+@font-face {
+	font-family: "DM Sans";
+	src: url("./assets/fonts/dm-sans/DMSans-Variable.ttf") format("truetype");
+	font-style: normal;
+	font-weight: 100 1000;
+	font-display: swap;
+}
+@font-face {
+	font-family: "DM Sans";
+	src: url("./assets/fonts/dm-sans/DMSans-Italic-Variable.ttf") format("truetype");
+	font-style: italic;
+	font-weight: 100 1000;
+	font-display: swap;
+}
+
+/* Layout aliases only. All component colors and styling come from HeroUI's default theme. */
+@theme inline {
+	--font-sans: var(--app-font-sans);
+	--color-primary: var(--accent);
+	--color-primary-foreground: var(--accent-foreground);
+	--color-secondary: var(--default);
+	--color-secondary-foreground: var(--default-foreground);
+	--color-muted-foreground: var(--muted);
+	--color-card: var(--surface);
+	--color-card-foreground: var(--surface-foreground);
+	--color-popover: var(--overlay);
+	--color-popover-foreground: var(--overlay-foreground);
+	--color-destructive: var(--danger);
+	--color-destructive-foreground: var(--danger-foreground);
+	--color-input: var(--field-border);
+	--color-ring: var(--focus);
+	--color-editor-bg: var(--background);
+	--color-editor-header: var(--surface);
+	--color-editor-panel: var(--surface);
+	--color-editor-surface: var(--surface);
+	--color-editor-surface-alt: var(--surface-secondary);
+	--color-editor-dialog: var(--overlay);
+	--color-editor-dialog-alt: var(--surface-secondary);
+	--color-editor-timeline: var(--background);
+	--color-editor-row: var(--surface);
+	--color-editor-subrow: var(--surface-secondary);
+}
+
+@layer base {
+	:root {
+		--app-font-sans:
+			"DM Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		--brand-accent: var(--accent);
+		--brand-accent-rgb: 0, 111, 238;
+		--primary: var(--accent);
+		--primary-foreground: var(--accent-foreground);
+		--muted-foreground: var(--muted);
+		--destructive: var(--danger);
+		--input: var(--field-border);
+	}
+	html,
+	body,
+	#root {
+		width: 100%;
+		height: 100%;
+		margin: 0;
+	}
+	body {
+		background: var(--background);
+		color: var(--foreground);
+		font-family: var(--app-font-sans);
+		user-select: none;
+	}
+	html.hud-overlay-window,
+	body.hud-overlay-window,
+	#root.hud-overlay-window {
+		overflow: hidden;
+	}
+	input,
+	textarea {
+		user-select: text;
+	}
+	button,
+	input,
+	textarea,
+	select,
+	[role="button"],
+	[role="slider"],
+	[role="switch"] {
+		-webkit-app-region: no-drag;
+	}
+}
+
+@layer utilities {
+	.timeline-cursor-smooth {
+		will-change: transform;
+		transition:
+			left 33ms linear,
+			right 33ms linear;
+	}
+	.custom-scrollbar {
+		scrollbar-width: thin;
+		scrollbar-color: var(--scrollbar-thumb) transparent;
+	}
+}
+
+/* Responsive geometry belongs to the editor, leaving HeroUI control styles intact. */
+.editor-header-start,
+.editor-header-end {
+	white-space: nowrap;
+}
+.editor-playback {
+	container-type: inline-size;
+}
+@container (max-width: 760px) {
+	.editor-playback-tools {
+		grid-row: 2;
+		grid-column: 1 / -1;
+		justify-content: center;
+		padding-bottom: 8px;
+	}
+	.editor-playback-center {
+		grid-row: 1;
+		grid-column: 2;
+	}
+	.editor-playback-volume {
+		grid-row: 1;
+		grid-column: 3;
+	}
+}
+@container (max-width: 520px) {
+	.editor-playback-volume .slider {
+		display: none;
+	}
+}
+
+/* HeroUI owns control focus rings; native controls use the same accent token.
+   Do not outline dialogs or other programmatically focused containers. */
+:root,
+.dark {
+ --focus: var(--accent);
+}
+:focus-visible:not([data-rac]):not([role="dialog"]):not([role="alertdialog"]):not([tabindex="-1"]) {
+ outline: 2px solid var(--focus);
+ outline-offset: 2px;
+}
+::selection {
+ background: var(--accent-soft);
+ color: var(--foreground);
+}
+
+@container (max-width: 110px) {
+	.zoom-icon,
+	.zoom-mode {
+		display: none;
+	}
+}
+@container (min-height: 40px) and (min-width: 110px) {
+	.zoom-mode {
+		display: block;
+		margin-left: 0;
+		font-size: 10px;
+		text-align: center;
+	}
+}
+@container (max-height: 39px) {
+	.zoom-mode {
+		margin-left: 4px;
+	}
+}
+
+@keyframes editor-section-enter {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+.editor-section-enter {
+	animation: editor-section-enter 180ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+	.editor-section-enter {
+		animation: none;
+	}
+}
+
+.dashboard-surface .folder-row > button {
+  background: transparent;
+}
+
+.inline-project-name {
+ background: transparent;
+ border: 0;
+ border-radius: 0;
+ box-shadow: none;
+ outline: none;
+ padding: 0;
+ color: inherit;
+}
+.inline-project-name:focus { outline: none; box-shadow: none; }
+.inline-project-name:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.dashboard-shell {
+ background-color: color-mix(in srgb, var(--background) 92%, var(--foreground) 8%);
+}
+
+.dark .dashboard-shell { background-color: var(--background); }
+.dark .dashboard-shell > .card { background-color: color-mix(in srgb, var(--background) 92%, var(--foreground) 8%); }
+
+.dashboard-settings .custom-scrollbar { padding-inline: 0; scrollbar-gutter: auto !important; }

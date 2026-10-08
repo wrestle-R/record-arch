@@ -1,0 +1,262 @@
+{
+	"zoom": {
+		"level": "Nível de zoom",
+		"selectRegion": "Selecione uma região de zoom para ajustar",
+		"deleteZoom": "Excluir zoom",
+		"modeAuto": "Auto",
+		"modeManual": "Manual",
+		"modeManualDescription": "Defina um ponto de foco fixo para este zoom",
+		"modeAutoDescription": "A câmera segue o cursor automaticamente"
+	},
+	"trim": {
+		"deleteRegion": "Excluir região de corte"
+	},
+	"speed": {
+		"playbackSpeed": "Velocidade de reprodução",
+		"selectRegion": "Selecione uma região de velocidade para ajustar",
+		"deleteRegion": "Excluir região de velocidade",
+		"label": "Velocidade"
+	},
+	"clip": {
+		"title": "Clipe",
+		"mute": "Silenciar clipe",
+		"resetAudioSettings": "Redefinir configurações de áudio",
+		"mutedState": "O áudio está mudo",
+		"unmutedState": "O áudio está tocando",
+		"separateClipFromAudio": "Separar áudio do clipe",
+		"delete": "Excluir clipe"
+	},
+	"effects": {
+		"title": "Efeitos de vídeo",
+		"show": "Mostrar",
+		"showCursor": "Mostrar cursor",
+		"loopCursor": "Loop do cursor",
+		"cursorStyle": "Estilo do cursor",
+		"cursorStyleOptions": {
+			"macos": "macOS",
+			"tahoe": "Tahoe",
+			"tahoe-inverted": "Tahoe invertido",
+			"windows11": "Windows 11",
+			"dot": "Dot",
+			"figma": "Minimal",
+			"lavender": "Lavender",
+			"parched": "Parched",
+			"chooper": "Chooper",
+			"amongus": "Among Us",
+			"turtle": "Turtle"
+		},
+		"backgroundBlur": "Desfoque",
+		"zoomMotionBlur": "Desfoque de movimento do zoom",
+		"auto": "Auto",
+		"connectZooms": "Conectar zooms",
+		"connectZoomsDescription": "Suaviza regiões de zoom consecutivas em um movimento contínuo de câmera.",
+		"autoApplyFreshRecordingZooms": "Aplicar zooms automaticamente em gravações novas",
+		"autoApplyFreshRecordingZoomsDescription": "Sugere zooms seguindo o cursor automaticamente ao abrir uma nova gravação.",
+		"zoomGeneralTitle": "Geral",
+		"zoomGeneralDescription": "Configurações globais de movimento para cada transição de zoom.",
+		"zoomInTitle": "Aproximar",
+		"zoomInDescription": "Controla como a câmera entra em uma região de zoom.",
+		"zoomOutTitle": "Afastar",
+		"zoomOutDescription": "Controla como a câmera sai de uma região de zoom.",
+		"connectedZoomTitle": "Entre zooms",
+		"connectedZoomDescription": "Ajuste o deslizamento entre regiões de zoom consecutivas quando a conexão estiver ativada.",
+		"motionPresetsTitle": "Motion Presets",
+		"motionPresetsZoomHint": "Zoom motion presets are available in Settings.",
+		"animationPresets": "Animation Presets",
+		"cursorMotionPresets": "Cursor Motion Presets",
+		"motionPresets": {
+			"focused": {
+				"label": "Focused",
+				"description": "Snappier motion for demos, walkthroughs, and everyday recordings."
+			},
+			"smooth": {
+				"label": "Smooth",
+				"description": "Gentler motion for presentations, keynote-style videos, and polished reveals."
+			}
+		},
+		"zoomInDuration": "Duração do zoom in",
+		"zoomInOverlap": "Sobreposição do zoom in",
+		"zoomOutDuration": "Duração do zoom out",
+		"zoomInEasing": "Curva do zoom in",
+		"zoomOutEasing": "Curva do zoom out",
+		"connectedZoomGap": "Intervalo entre zooms conectados",
+		"connectedZoomDuration": "Duração do zoom conectado",
+		"connectedZoomEasing": "Curva de pan conectado",
+		"zoomEasingOptions": {
+			"recordly": "Recordly",
+			"glide": "Glide",
+			"smooth": "Smooth",
+			"snappy": "Snappy",
+			"linear": "Linear"
+		},
+		"cursorSize": "Tamanho do cursor",
+		"cursorSmoothing": "Suavização do cursor",
+		"cursorSpringStiffness": "Cursor Spring Stiffness",
+		"cursorSpringDamping": "Cursor Spring Damping",
+		"cursorSpringMass": "Cursor Spring Mass",
+		"off": "Desligado",
+		"cursorClickEffects": {
+			"title": "Click Effects",
+			"advanced": "Advanced",
+			"advancedShow": "Show advanced click effect controls",
+			"advancedHide": "Hide advanced click effect controls",
+			"color": "Effect Color",
+			"size": "Effect Size",
+			"opacity": "Effect Opacity",
+			"duration": "Effect Duration",
+			"none": {
+				"label": "Off",
+				"description": "No click graphic. Only the cursor motion changes when you click."
+			},
+			"ripple": {
+				"label": "Ripple",
+				"description": "Expanding rings radiate from each click so taps read clearly in motion."
+			},
+			"spotlight": {
+				"label": "Spotlight",
+				"description": "A soft halo flashes around the pointer to emphasize the clicked area."
+			},
+			"echo": {
+				"label": "Echo",
+				"description": "A pair of soft rings that spread outward with a cleaner pulse."
+			}
+		},
+		"cursorMotionBlur": "Desfoque de movimento do cursor",
+		"cursorClickBounce": "Salto de clique do cursor",
+		"cursorClickBounceDuration": "Velocidade do salto",
+		"cursorSway": "Balanço do cursor",
+		"webcam": "Sobreposição da webcam",
+		"webcamFootage": "Filmagem da webcam",
+		"webcamFootageDescription": "Nenhuma filmagem de webcam vinculada a este vídeo",
+		"uploadWebcamFootage": "Enviar filmagem",
+		"replaceWebcamFootage": "Substituir filmagem",
+		"removeWebcamFootage": "Remover filmagem",
+		"webcamFootageAdded": "Filmagem da webcam vinculada",
+		"webcamFootageRemoved": "Filmagem da webcam removida",
+		"webcamSize": "Tamanho da webcam",
+		"webcamWidth": "Largura da webcam",
+		"webcamHeight": "Altura da webcam",
+		"webcamCrop": "Corte da webcam",
+		"webcamReactToZoom": "Webcam reage ao zoom",
+		"webcamMirror": "Espelhar webcam",
+		"webcamRoundness": "Arredondamento da webcam",
+		"webcamShadow": "Sombra da webcam",
+		"shadow": "Sombra",
+		"radius": "Raio",
+		"roundness": "Arredondamento",
+		"padding": "Espaçamento",
+		"paddingLinked": "Vinculado (uniforme)",
+		"paddingUnlinked": "Não vinculado (assimétrico)",
+		"paddingTop": "Superior",
+		"paddingBottom": "Inferior",
+		"paddingLeft": "Esquerdo",
+		"paddingRight": "Direito",
+		"removeBackground": "Remover fundo"
+	},
+	"sections": {
+		"scene": "Cena",
+		"captions": "Legendas",
+		"caption": "Legenda",
+		"zoom": "Zoom",
+		"cursor": "Cursor",
+		"webcam": "Webcam",
+		"frame": "Quadro",
+		"crop": "Corte"
+	},
+	"captions": {
+		"selectOnTimeline": "Selecione uma legenda na linha do tempo para editá-la.",
+		"enabled": "Mostrar",
+		"timelineQuickAdd": "Passe o cursor para adicionar na linha do tempo",
+		"language": "Idioma",
+		"downloading": "Baixando...",
+		"deleteModel": "Excluir modelo",
+		"clearModel": "Limpar modelo",
+		"downloadModel": "Baixar modelo",
+		"generating": "Gerando...",
+		"generateFull": "Gerar legendas",
+		"regenerateFull": "Gerar legendas novamente",
+		"clearFull": "Limpar legendas",
+		"fontSettings": "Configurações da fonte",
+		"defaultFont": "Padrão",
+		"fontFamily": "Fonte",
+		"fontSize": "Tamanho da fonte",
+		"rowCount": "Linhas",
+		"animation": "Animação",
+		"animationOff": "Desligado",
+		"animationFade": "Fade",
+		"animationRise": "Rise",
+		"animationPop": "Pop",
+		"bottomOffset": "Deslocamento inferior",
+		"maxWidth": "Largura máxima",
+		"boxRadius": "Raio da caixa",
+		"backgroundOpacity": "Opacidade do fundo",
+		"textColor": "Cor do texto",
+		"editor": {
+			"text": "Text",
+			"start": "Start",
+			"end": "End",
+			"split": "Split",
+			"merge": "Merge",
+			"delete": "Delete"
+		}
+	},
+	"crop": {
+		"title": "Cortar vídeo",
+		"instruction": "Arraste cada lado para ajustar a área de corte",
+		"top": "Topo",
+		"bottom": "Base",
+		"left": "Esquerda",
+		"right": "Direita",
+		"openEditor": "Abrir editor de corte"
+	},
+	"background": {
+		"title": "Fundo",
+		"image": "Imagem",
+		"color": "Cor",
+		"gradient": "Gradiente",
+		"wallpaperPreview": "Prévia do papel de parede",
+		"uploadCustom": "Enviar personalizado",
+		"uploadSuccess": "Imagem personalizada enviada com sucesso!",
+		"uploadError": "Envie um arquivo de imagem JPG ou JPEG.",
+		"uploadErrorDescription": "Somente imagens JPG e JPEG são suportadas."
+	},
+	"export": {
+		"title": "Exportar",
+		"mp4": "MP4",
+		"gif": "GIF",
+		"quality": {
+			"low": "Baixa",
+			"medium": "Média",
+			"high": "Alta",
+			"original": "Original"
+		},
+		"fpsTitle": "FPS",
+		"loop": "Repetir",
+		"outputDimensions": "Saída: {{dimensions}}px",
+		"sizePresetOriginalShort": "Orig",
+		"sizePresetMediumShort": "Med",
+		"sizePresetLargeShort": "Gra",
+		"loadProject": "Carregar projeto",
+		"saveProject": "Salvar projeto",
+		"exportVideo": "Exportar {{format}}",
+		"reportBug": "Reportar bug",
+		"starOnGithub": "Dar estrela no GitHub"
+	},
+	"audio": {
+		"title": "Áudio",
+		"volumeTitle": "Áudio",
+		"volume": "Volume",
+		"normalize": "Normalizar",
+		"sourceTracksTitle": "Áudio original do clipe",
+		"systemLabel": "Sistema",
+		"micLabel": "Microfone",
+		"mixedLabel": "Fonte",
+		"deleteRegion": "Excluir áudio"
+	},
+	"updates": {
+		"experimentalDescription": "Você ativou as atualizações experimentais, então pode escolher testar a atualização mais recente do Recordly antes que ela fique amplamente disponível.",
+		"title": "Atualizações",
+		"experimental": "Atualizações experimentais",
+		"saveFailed": "Falha ao alterar o canal de atualização."
+	}
+}

@@ -1,0 +1,199 @@
+{
+	"cloud": {
+		"signInRequired": "创建共享链接前，请先登录 Recordly。",
+		"prepareFailed": "无法准备当前剪辑以供分享。",
+		"uploadFailed": "云端上传失败。",
+		"linkCreated": "共享链接已创建",
+		"linkCopied": "链接已复制",
+		"copyFailed": "无法复制链接，请选中后手动复制。",
+		"copied": "已复制",
+		"copy": "复制",
+		"preparing": "正在准备当前剪辑…",
+		"createLink": "创建链接",
+		"heading": "分享到云端",
+		"ready": "视频已准备好，可以分享了。",
+		"openPage": "打开分享页面",
+		"notes": "备注",
+		"publish": "发布并创建链接",
+		"createLinkTitle": "创建可分享的链接",
+		"notesPlaceholder": "为观看者添加背景信息、说明或简短摘要…",
+		"description": "将当前剪辑发布到 Recordly 观看和反馈页面，无需下载。分享的视频最高为 1080p。",
+		"uploading": "正在上传… {progress}%",
+		"googleUnavailable": "尚未启用 Google 登录。请使用邮箱，或请 Recordly 管理员连接 Google。",
+		"xUnavailable": "尚未启用 X 登录。请使用邮箱，或请 Recordly 管理员连接 X。",
+		"providerUnavailable": "尚未启用此登录方式，请先使用邮箱。",
+		"enterEmail": "请先输入邮箱地址。",
+		"resetSent": "密码重置邮件已发送。",
+		"accountHeading": "你的 Recordly 账户",
+		"signInHeading": "登录 Recordly",
+		"signInShareDescription": "登录后即可发布此视频并管理共享链接。",
+		"signInDescription": "访问你的录制内容和共享链接。",
+		"signingOut": "正在退出…",
+		"signOut": "退出登录",
+		"signingIn": "正在登录…",
+		"signIn": "登录",
+		"or": "或",
+		"email": "邮箱",
+		"password": "密码",
+		"forgotPassword": "忘记密码？",
+		"unavailable": "此版本尚不支持云端登录，你仍然可以将视频保存到电脑。",
+		"createShareLink": "创建共享链接",
+		"done": "完成",
+		"addingVideo": "正在添加视频…",
+		"preparingFootage": "正在为时间轴准备视频和音频。"
+	},
+	"library": {
+		"videos": "视频"
+	},
+	"playback": {
+		"play": "播放",
+		"pause": "暂停",
+		"skipBack": "后退",
+		"skipForward": "前进",
+		"muteUnmute": "静音/取消静音",
+		"volume": "预览音量"
+	},
+	"annotations": {
+		"settings": "注释设置",
+		"active": "活动",
+		"text": "文本",
+		"image": "图片",
+		"arrow": "箭头",
+		"blur": "模糊",
+		"textContent": "文本内容",
+		"textPlaceholder": "输入文本...",
+		"fontStyle": "字体样式",
+		"selectStyle": "选择样式",
+		"size": "大小",
+		"toggleBold": "切换粗体",
+		"toggleItalic": "切换斜体",
+		"toggleUnderline": "切换下划线",
+		"alignLeft": "左对齐",
+		"alignCenter": "居中对齐",
+		"alignRight": "右对齐",
+		"textColor": "文本颜色",
+		"background": "背景",
+		"none": "无",
+		"clearBackground": "清除背景",
+		"uploadImage": "上传图片",
+		"supportedFormats": "支持格式：JPG、PNG、GIF、WebP",
+		"arrowDirection": "箭头方向",
+		"strokeWidth": "描边宽度：{{width}}px",
+		"arrowColor": "箭头颜色",
+		"deleteAnnotation": "删除注释",
+		"shortcutsAndTips": "快捷键与提示",
+		"tipSelectAnnotation": "将播放头移动到注释重叠区域并选择项目。",
+		"tipCycleForward": "使用 Tab 循环切换重叠项目。",
+		"tipCycleBackward": "使用 Shift+Tab 反向循环切换。",
+		"imageUploadSuccess": "图片上传成功！",
+		"imageUploadError": "请上传 JPG、PNG、GIF 或 WebP 图片文件。",
+		"blurStrength": "模糊强度: {{strength}}",
+		"solidColor": "纯色 (审查)",
+		"borderRadius": "边框半径"
+	},
+
+	"fontStyles": {
+		"classic": "经典",
+		"editor": "编辑器",
+		"strong": "加粗",
+		"typewriter": "打字机",
+		"deco": "装饰",
+		"simple": "简约",
+		"modern": "现代",
+		"clean": "清爽"
+	},
+	"format": {
+		"mp4Video": "MP4 视频",
+		"mp4Description": "高质量视频文件",
+		"gifAnimation": "GIF 动画",
+		"gifDescription": "可分享的动态图片"
+	},
+	"gifOptions": {
+		"frameRate": "帧率",
+		"outputSize": "输出尺寸",
+		"outputDimensions": "输出：{{width}} × {{height}}px",
+		"loopAnimation": "循环动画",
+		"loopDescription": "GIF 将持续播放"
+	},
+	"tutorial": {
+		"howTrimmingWorks": "修剪的工作方式",
+		"title": "修剪的工作方式",
+		"understanding": "了解如何裁剪视频中不需要的部分。",
+		"descriptionP1": "修剪工具通过定义要",
+		"descriptionRemove": "移除",
+		"descriptionP2": "的片段来工作。",
+		"descriptionP3": "时间线上被红色修剪区域覆盖的部分将在导出时被剪掉。",
+		"visualExample": "视觉示例",
+		"removed": "已移除",
+		"kept": "保留",
+		"finalVideo": "最终视频",
+		"part": "第 {{number}} 部分",
+		"addTrimStep": "1. 添加修剪",
+		"addTrimDesc": "按 T 或点击剪刀图标标记要移除的部分。",
+		"adjustStep": "2. 调整",
+		"adjustDesc": "拖动红色区域的边缘，精确覆盖要剪掉的部分。"
+	},
+	"feedback": {
+		"trigger": "反馈",
+		"title": "反馈与联系",
+		"description": "如果有问题或缺失功能，可以直接联系或提交 issue。",
+		"emailLabel": "邮箱",
+		"xLabel": "X",
+		"reportIssue": "报告问题 / 提交反馈",
+		"openFailed": "打开链接失败。"
+	},
+	"keyboardShortcuts": {
+		"trigger": "快捷键",
+		"title": "键盘快捷键",
+		"description": "时间线和编辑器控制的快速参考。",
+		"customizeTooltip": "自定义快捷键",
+		"customize": "自定义",
+		"panTimeline": "平移时间线",
+		"zoomTimeline": "缩放时间线",
+		"cycleAnnotations": "循环切换注释",
+		"tab": "Tab"
+	},
+	"actions": {
+		"saveAgain": "再次保存",
+		"showInFolder": "在文件夹中显示"
+	},
+	"project": {
+		"untitled": "未命名",
+		"unsavedChangesTitle": "未保存的更改",
+		"unsavedChangesDescription": "在{{action}}之前保存当前项目吗？",
+		"discardChanges": "放弃更改",
+		"saveProject": "保存项目"
+	},
+	"exportTips": {
+		"autoZooms": "提示：可在设置中关闭自动应用的缩放",
+		"experimentalBuilds": "提示：可在设置中开启实验版本访问权限",
+		"cursorAppearance": "提示：你可以自定义光标外观"
+	},
+	"account": { "title": "账户", "comingSoon": "账户功能即将推出" },
+	"nativeCaptureUnavailable": {
+		"title": "没有出错，但我们无法渲染动画光标叠加层。",
+		"description": "你的设备不支持原生捕获。这可能是由我们尚未确定的多种原因造成的。Recordly 仍可继续运行，但无法进行光标平滑处理。",
+		"confirm": "好的"
+	},
+	"exportStatus": {
+		"exporting": "正在导出",
+		"renderingFile": "正在渲染你的文件。",
+		"preparing": "正在准备导出...",
+		"completePercent": "已完成 {{percent}}%",
+		"issue": "导出问题",
+		"complete": "导出完成",
+		"savedSuccessfully": "文件已成功保存。"
+	},
+	"export": {
+		"processingAudioEdits": "正在处理带有速度/叠加编辑的音频"
+	},
+	"toolbar": {
+		"addLayer": "添加图层",
+		"splitClip": "拆分片段 (C)"
+	},
+	"timeline": {
+		"expand": "展开时间轴",
+		"collapse": "折叠时间轴"
+	},
+	"openRecordingsFolder": "打开录制文件夹"
+}

@@ -1,0 +1,17 @@
+.launch-theme {
+	--launch-surface: var(--overlay);
+	--launch-panel: var(--surface);
+	--launch-border: var(--border);
+	--launch-border-strong: var(--separator);
+	--launch-text: var(--foreground);
+	--launch-text-muted: var(--muted);
+	--launch-label: var(--muted);
+	--launch-hover: var(--default-hover);
+	--launch-selected: var(--accent-soft);
+	--launch-accent: var(--accent);
+	--launch-accent-soft: var(--accent-soft);
+	--launch-bar-bg: var(--surface);
+	--launch-bar-border: var(--border);
+	--launch-bar-shadow: var(--surface-shadow);
+	color: var(--foreground);
+}
