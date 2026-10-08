@@ -14,7 +14,7 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
                 s.project = None;
             }
             s.event("arch-recording-complete", json!([v]));
-            Ok(s.session.clone())
+            Ok(json!({"success":true,"session":s.session,"path":v["path"]}))
         }),
         "arch-record-pause" => s.recorder.pause(true),
         "arch-record-resume" => s.recorder.pause(false),

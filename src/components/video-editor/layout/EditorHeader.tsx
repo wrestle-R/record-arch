@@ -1,4 +1,4 @@
-import { FeedbackDialog } from "@/components/feedback/FeedbackDialog";
+import { Record as ArchRecord, FolderOpen as ArchOpen, CircleHalfTilt } from "@phosphor-icons/react";
 import { Separator } from "@heroui/react";
 import {
 	House,
@@ -19,7 +19,7 @@ import { EditorExportMenu } from "./EditorExportMenu";
 import { EditorPresetMenu } from "./EditorPresetMenu";
 
 // Keep the preset implementation available for future use.
-const SHOW_PRESETS_BUTTON = false;
+const SHOW_PRESETS_BUTTON = true;
 
 type Props = {
 	clipsOpen: boolean;
@@ -117,12 +117,14 @@ export function EditorHeader(props: Props) {
 					size="sm"
 					onClick={handleOpenProjectBrowser}
 					className="h-9 shrink-0 gap-2 px-3"
-					title="Home"
-					aria-label="Home"
+					title="Project library"
+					aria-label="Project library"
 				>
-					<House weight="fill" className="h-4 w-4" />
-					<span>Home</span>
+					<FilmStrip weight="duotone" className="h-5 w-5" />
+					<span className="arch-brand">Record Arch</span>
 				</Button>
+                <Button variant="ghost" size="sm" aria-label="Open video or project" title="Open video · Ctrl+O" onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', {key:'o',code:'KeyO',ctrlKey:true,bubbles:true}))}><ArchOpen size={17}/><span>Open</span></Button>
+                <Button variant="ghost" size="sm" aria-label="New recording" onClick={() => window.dispatchEvent(new Event('arch-open-recorder'))}><ArchRecord size={17}/><span>Record</span></Button>
 				<span
 					aria-hidden="true"
 					className="mx-2 shrink-0 text-xl font-light text-muted-foreground/60"
@@ -222,7 +224,7 @@ export function EditorHeader(props: Props) {
 					</Button>
 				</div>
 				{SHOW_PRESETS_BUTTON && <EditorPresetMenu t={t} presets={presets} />}
-				<FeedbackDialog />
+				
 				<EditorExportMenu
 					t={t}
 					exportSettings={exportSettings}

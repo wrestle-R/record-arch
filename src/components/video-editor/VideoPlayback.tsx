@@ -2372,7 +2372,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 			>
 				{/* Background layer */}
 				{resolvedWallpaperKind === "video" && resolvedWallpaper ? (
-					<video
+					<video crossOrigin="anonymous"
 						key={resolvedWallpaper}
 						ref={bgVideoRef}
 						className="absolute object-cover"
@@ -2464,7 +2464,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 											className="pointer-events-none absolute"
 											style={webcamCropPreviewContentStyle}
 										>
-											<video
+											<video crossOrigin="anonymous"
 												ref={webcamVideoRef}
 												src={webcamVideoPath}
 												className="pointer-events-none absolute inset-0 block h-full w-full object-fill"
@@ -2800,7 +2800,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 				)}
 				{/* Keep the source video off-screen instead of display:none so the
 					browser continues producing presented frames for Pixi and preview sync. */}
-				<video
+				<video crossOrigin="anonymous"
 					ref={attachVideo}
 					src={videoPath}
 					className="pointer-events-none absolute left-0 top-0 h-px w-px opacity-0"

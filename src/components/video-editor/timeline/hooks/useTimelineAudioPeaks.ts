@@ -1,3 +1,5 @@
+import { rpc } from "@/desktop/transport";
+import { getLocalFilePath } from "@/lib/exporter/localMediaSource";
 import { useEffect, useRef, useState } from "react";
 import { getVersionedAudioResourceUrl } from "@/components/video-editor/audio/audioResourceVersion";
 import { resolveMediaResourceUrl } from "@/lib/exporter/localMediaSource";
@@ -77,7 +79,13 @@ export function useTimelineAudioPeaks(
 
 		const run = async () => {
 			const tryGenerate = async (resource: string): Promise<AudioPeaksData> => {
-				const resolvedUrl = await resolveMediaResourceUrl(resource);
+				const localPath = getLocalFilePath(resource);
+                if (localPath) {
+                    const result = await rpc("arch-audio-peaks",localPath,peakCount);
+                    if (!result.success) throw new Error(result.error);
+                    return {durationMs:result.durationMs,peaks:new Float32Array(result.peaks)};
+                }
+                const resolvedUrl = await resolveMediaResourceUrl(resource);
 				const versionedUrl = getVersionedAudioResourceUrl(resolvedUrl, resourceVersion);
 				return waveformGenerator.generate(versionedUrl, peakCount, resourceVersion);
 			};
@@ -101,7 +109,7 @@ export function useTimelineAudioPeaks(
 			}
 
 			let sourceSidecarCandidates: string[] = [];
-			if (enableSourceSidecarFallback) {
+			if (enableSourceSidecarFallback && !window.electronAPI) {
 				const localPathFromServer = extractLocalPathFromMediaServerUrl(mediaResource);
 				const localSourcePath =
 					localPathFromServer ||

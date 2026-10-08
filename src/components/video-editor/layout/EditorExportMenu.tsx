@@ -182,11 +182,11 @@ export function EditorExportMenu(props: Props) {
 						className="inline-flex h-9 min-w-[104px] items-center justify-center gap-2 px-4.5"
 					>
 						<Export className="h-4 w-4" />
-						<span className="text-sm font-semibold tracking-tight">Publish</span>
+						<span className="text-sm font-semibold tracking-tight">Export</span>
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent
-					aria-label="Publish"
+					aria-label="Export"
 					align="end"
 					sideOffset={10}
 					className="w-[360px] max-h-none overflow-hidden p-0"
@@ -201,9 +201,9 @@ export function EditorExportMenu(props: Props) {
 					>
 						<div ref={contentRef}>
 							<div className="p-5 space-y-3">
-								<h2 className="text-sm font-semibold">Publish</h2>
+								<h2 className="text-sm font-semibold">Export</h2>
 								<TagGroup
-									aria-label="Publish destination"
+									aria-label="Export destination"
 									selectionMode="single"
 									disallowEmptySelection
 									selectedKeys={[destination]}
@@ -220,11 +220,11 @@ export function EditorExportMenu(props: Props) {
 									<TagGroup.List className="flex gap-2">
 										<Tag
 											id="link"
-											isDisabled={isExporting || shareBusy}
+											isDisabled={true}
 											className="h-24 flex-1 flex-col justify-center gap-2 rounded-xl border border-foreground/10"
 										>
 											<LinkSimple className="size-6" />
-											Link
+											Link (not configured)
 										</Tag>
 										<Tag
 											id="local"

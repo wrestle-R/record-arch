@@ -879,6 +879,7 @@ export class FrameRenderer {
 		this.cleanupBackgroundSource = backgroundSource.revoke;
 
 		const video = document.createElement("video");
+        video.crossOrigin = "anonymous";
 		video.muted = true;
 		video.loop = true;
 		video.playsInline = true;
@@ -1168,6 +1169,7 @@ export class FrameRenderer {
 		this.cleanupWebcamSource = webcamSource.revoke;
 
 		const video = document.createElement("video");
+        video.crossOrigin = "anonymous";
 		video.src = webcamSource.src;
 		video.muted = true;
 		video.preload = "auto";

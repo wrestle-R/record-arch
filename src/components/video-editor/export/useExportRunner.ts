@@ -325,15 +325,11 @@ export function useExportRunner(input: ExportRunnerInput) {
 						sourceAudioTrackSettings: sourceAudioTrackSettingsForExport,
 					};
 
-					const Exporter =
-						pipelineModel === "modern"
-							? (await import("@/lib/exporter/modernVideoExporter"))
-									.ModernVideoExporter
-							: (await import("@/lib/exporter/videoExporter")).VideoExporter;
+					const { NativeExporter: Exporter } = await import("@/arch/NativeExporter");
 					if (exportWasCancelled()) return;
 					const exporter =
 						pipelineModel === "modern"
-							? new Exporter({ ...exporterConfig, backendPreference })
+							? new Exporter(exporterConfig)
 							: new Exporter(exporterConfig);
 
 					exporterRef.current = exporter;

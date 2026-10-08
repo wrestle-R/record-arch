@@ -124,6 +124,10 @@ export function getOrderedSupportedMp4EncoderCandidates(options: {
 export async function resolveSupportedMp4EncoderPath(
 	options: ResolveMp4EncoderPathOptions,
 ): Promise<SupportedMp4EncoderPath | null> {
+	if (typeof window !== "undefined" && window.electronAPI) {
+		const doctor = await import("@/desktop/transport").then(({rpc}) => rpc("arch-doctor")).catch(() => null);
+		if (doctor?.ffmpeg) return {codec: options.codec ?? DEFAULT_MP4_CODEC, hardwareAcceleration:"prefer-software"};
+	}
 	const codec = options.codec ?? DEFAULT_MP4_CODEC;
 	const width = normalizeEvenDimension(options.width);
 	const height = normalizeEvenDimension(options.height);

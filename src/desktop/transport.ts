@@ -34,7 +34,7 @@ async function picker(channel:string,args:any[]):Promise<any> {
   const extensions=channel==='open-audio-file-picker'?['mp3','wav','ogg','m4a','flac']:channel.includes('whisper')?[]:['mp4','mov','webm','mkv','recordarch','recordly'];
   const selected=await open({multiple:false,filters:extensions.length?[{name:'Media and projects',extensions}]:undefined});
   if(!selected)return {success:false,canceled:true};
-  if(channel.includes('whisper')||channel==='open-audio-file-picker')return {success:true,path:selected};
+  if(channel.includes('whisper')||channel==='open-audio-file-picker')return rpc('arch-approve-file',selected);
   if(/\.(recordarch|recordly)$/i.test(selected)){const result=await rpc('open-project-file-at-path',selected);return {...result,kind:'project'};}
   const result=await rpc('arch-import',selected);return {...result,kind:'video'};
 }

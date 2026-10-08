@@ -23,7 +23,7 @@ export function useExportSettings(
 	const [includeCaptionSidecar, setIncludeCaptionSidecar] = useState(
 		preferences.includeCaptionSidecar,
 	);
-	const [publishDestination, setPublishDestination] = useState(preferences.publishDestination);
+	const [publishDestination, setPublishDestination] = useState<"local" | "link">("local");
 	const [exportQuality, setExportQuality] = useState<ExportQuality>(preferences.exportQuality);
 	const [exportEncodingMode, setExportEncodingMode] = useState<ExportEncodingMode>(
 		preferences.exportEncodingMode,

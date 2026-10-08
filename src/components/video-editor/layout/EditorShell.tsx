@@ -149,15 +149,7 @@ export function EditorShell(props: Props) {
 		),
 		[settingsPanelProps, showOnboarding],
 	);
-	const onboarding = (
-		<OnboardingController
-			requestNonce={onboardingRequest}
-			ready={!project.loading && !auth.loading}
-			user={auth.user}
-			configured={auth.configured}
-			callbackError={auth.callbackError}
-		/>
-	);
+	const onboarding = null;
 	const editorDialogs = (
 		<AccountProfileContext.Provider value={auth.user}>
 			<DashboardSettingsContext.Provider value={dashboardSettingsContent}>
@@ -294,7 +286,7 @@ export function EditorShell(props: Props) {
 				revealExportedFile={dialogActions.revealExportedFile}
 				exportMessage={exportMessage}
 			/>
-			<EditorAnnouncementBanner />
+			<span className="arch-attribution">Built on Recordly · AGPLv3</span>
 			<div
 				className="relative flex min-h-0 flex-1 flex-col"
 				onPointerDownCapture={(event) => {

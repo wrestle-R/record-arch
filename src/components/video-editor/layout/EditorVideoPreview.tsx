@@ -1,3 +1,4 @@
+import { EmptyEditor } from "@/arch/EmptyEditor";
 import type { ComponentProps, Dispatch, RefObject, SetStateAction } from "react";
 import type { AspectRatio } from "@/utils/aspectRatioUtils";
 import type { useVideoEditorAudio } from "../audio/useVideoEditorAudio";
@@ -62,6 +63,7 @@ export function EditorVideoPreview({
 	setError,
 	handlers,
 }: Props) {
+	if (!videoPath) return <EmptyEditor />;
 	return (
 		<VideoPlayback
 			clipRegions={timeline.clipRegions}

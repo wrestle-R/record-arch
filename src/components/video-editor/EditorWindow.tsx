@@ -19,8 +19,8 @@ export default function EditorWindow() {
 				<VideoEditor />
 				<ShortcutsConfigDialog />
 			</ShortcutsProvider>
-			<AnnouncementDialog audience="editor" />
-			<LiveAnnouncementNotifications audience="editor" />
+			
+			
 		</>
 	);
 }

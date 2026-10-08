@@ -30,6 +30,10 @@ fn bytes(value: &Value) -> Result<Vec<u8>> {
 pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
     Some((|| {
         Ok(match c {
+            "arch-audio-peaks" => {
+                let path = s.readable(Path::new(string(a, 0)?))?;
+                crate::core::waveform::peaks(&path, arg(a, 1).as_u64().unwrap_or(1000) as usize)?
+            }
             "probe-native-video-metadata" => {
                 let path = s.readable(Path::new(string(a, 0)?))?;
                 json!({"success":true,"metadata":media::probe(&path)?})

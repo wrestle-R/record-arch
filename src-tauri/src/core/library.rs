@@ -54,7 +54,7 @@ pub fn load(state: &mut State, path: &Path) -> Result<Value> {
         .and_then(Value::as_array)
     {
         for a in audio {
-            if let Some(p) = a["sourcePath"].as_str() {
+            if let Some(p) = a["audioPath"].as_str() {
                 let _ = state.approve(Path::new(p));
             }
         }
@@ -84,9 +84,17 @@ pub fn save(
     } else if let Some(path) = &state.project {
         path.clone()
     } else {
-        files::root()
-            .join("projects")
-            .join(format!("{}.recordarch", uuid::Uuid::new_v4()))
+        files::root().join("projects").join(format!(
+            "{}-{}.recordarch",
+            files::safe_name(
+                Path::new(data["videoPath"].as_str().unwrap())
+                    .file_stem()
+                    .unwrap_or_default()
+                    .to_string_lossy()
+                    .as_ref()
+            ),
+            &uuid::Uuid::new_v4().to_string()[..8]
+        ))
     };
     if path.exists() {
         let old = files::read_json(&path)?;
@@ -99,12 +107,15 @@ pub fn save(
     state.project = Some(path.clone());
     files::set_setting("lastProject", json!(path))?;
     Ok(
-        json!({"success":true,"path":path,"project":data,"projectName":path.file_stem().unwrap_or_default().to_string_lossy()}),
+        json!({"success":true,"path":path,"project":data,"projectId":data["projectId"],"projectName":path.file_stem().unwrap_or_default().to_string_lossy()}),
     )
 }
 pub fn latest(state: &mut State) -> Result<Value> {
     if let Some(path) = state.project.clone() {
         return load(state, &path);
+    }
+    if state.video.is_some() {
+        return Ok(json!({"success":false}));
     }
     let saved = files::setting("lastProject");
     if let Some(path) = saved.as_str() {

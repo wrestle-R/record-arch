@@ -31,7 +31,7 @@ export function loadThemePreference(): ThemePreference {
 	} catch {
 		// Ignore storage errors
 	}
-	return "system";
+	return "dark";
 }
 
 export function persistThemePreference(pref: ThemePreference): void {

@@ -1,0 +1,10 @@
+import {chromium} from '@playwright/test';
+const browser=await chromium.launch({headless:true,args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const page=await browser.newPage({viewport:{width:1440,height:960}});
+page.on('pageerror',e=>console.log('PAGE ERROR',e.message));
+page.on('console',m=>{if(m.type()==='error')console.log('CONSOLE ERROR',m.text().slice(0,300));});
+await page.goto('http://localhost:1420');
+await page.getByRole('heading',{name:'A little footage. A great story.'}).waitFor({timeout:60000});
+console.log((await page.locator('body').innerText()).slice(0,2200));
+await page.screenshot({path:'/tmp/record-arch-empty.png'});
+await browser.close();

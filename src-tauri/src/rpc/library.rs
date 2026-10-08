@@ -10,6 +10,7 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
         "clear-current-video-path"=>{s.video=None;s.session=Value::Null;json!({"success":true})},
         "set-current-video-path"=>{s.select_video(Path::new(string(a,0)?))?;if arg(a,1)["preserveProjectPath"]!=true{s.project=None;}json!({"success":true,"webcamPath":null})},
         "set-current-recording-session"=>{let session=arg(a,0);s.select_video(Path::new(session["videoPath"].as_str().ok_or_else(||anyhow::anyhow!("Missing videoPath"))?))?;if let Some(p)=session["webcamPath"].as_str(){s.approve(Path::new(p))?;}s.session=session.clone();json!({"success":true})},
+        "arch-approve-file"=>{let path=s.approve(Path::new(string(a,0)?))?;json!({"success":true,"path":path})},
         "arch-import"=>library::import(s,Path::new(string(a,0)?))?,
         "get-projects-directory"=>json!({"success":true,"path":files::root().join("projects"),"projectsDir":files::root().join("projects")}),
         "get-recordings-directory"=>json!({"success":true,"path":files::root().join("recordings")}),

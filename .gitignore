@@ -5,3 +5,6 @@ src-tauri/target/
 *.local
 playwright-report/
 test-results/
+
+src-tauri/gen/
+demo

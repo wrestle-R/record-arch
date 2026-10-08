@@ -128,7 +128,7 @@ fn run(cli: &Cli) -> anyhow::Result<Value> {
                 for (k, v) in patch.as_object().unwrap() {
                     data["editor"][k] = v.clone();
                 }
-                server::call("save-project-file", json!([data, path]))?
+                server::call("save-project-file", json!([data, null, path]))?
             }
         },
         Commands::Editor { path } => {
