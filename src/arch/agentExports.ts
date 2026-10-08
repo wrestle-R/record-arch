@@ -23,6 +23,8 @@ export function installAgentExports() {
 	};
 	const run = async (_: unknown, job: Job) => {
 		try {
+			const status = await rpc("arch-export-status", job.id);
+			if (status.job?.status === "cancelled") return;
 			const editor = normalizeProjectEditor(job.project.editor);
 			const resource = await rpc("get-local-media-url", job.project.videoPath);
 			const meta = await rpc("probe-native-video-metadata", job.project.videoPath);

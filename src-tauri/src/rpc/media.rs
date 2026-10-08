@@ -146,8 +146,8 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
                     .join(".cache")
                     .join(format!("stream-{id}.{ext}"));
                 fs::File::create(&path)?;
-                s.streams.insert(id.clone(), path);
-                json!({"success":true,"streamId":id})
+                s.streams.insert(id.clone(), path.clone());
+                json!({"success":true,"streamId":id,"tempPath":path})
             }
             "export-stream-write" => {
                 let path = s.streams.get(string(a, 0)?).context("Unknown stream")?;
@@ -160,6 +160,10 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
             }
             "export-stream-close" => {
                 let path = s.streams.remove(string(a, 0)?).context("Unknown stream")?;
+                if arg(a, 1)["abort"] == true {
+                    fs::remove_file(&path)?;
+                    return Ok(json!({"success":true}));
+                }
                 json!({"success":true,"tempPath":path,"tempFilePath":path})
             }
             "store-recorded-video" | "store-microphone-sidecar" => {
@@ -195,7 +199,7 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
                     bail!("Export destination already exists");
                 }
                 fs::create_dir_all(output.parent().context("No output directory")?)?;
-                fs::copy(&temp, &output)?;
+                files::publish(&temp, &output)?;
                 crate::core::captions::sidecar(&output, &arg(a, 0)["captionSidecar"])?;
                 fs::remove_file(temp)?;
                 json!({"success":true,"path":output})

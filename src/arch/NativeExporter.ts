@@ -17,6 +17,7 @@ export class NativeExporter {
 	async export(): Promise<ExportResult> {
 		const config = this.config;
 		let renderer: FrameRenderer | null = null;
+		let audioPath: string | null = null;
 		try {
 			const path = getLocalFilePath(config.videoUrl);
 			if (!path) throw new Error("Native export requires a local video.");
@@ -152,6 +153,7 @@ export class NativeExporter {
 			}
 			const mixed = await rpc("arch-mix-audio", { duration, tracks });
 			if (!mixed.success) throw new Error(mixed.error);
+			audioPath = mixed.path;
 			const result = await rpc("arch-encode-finish", this.session, { audioPath: mixed.path });
 			if (!result.success) throw new Error(result.error);
 			this.session = null;
@@ -160,6 +162,7 @@ export class NativeExporter {
 			return { success: false, error: String(error) };
 		} finally {
 			renderer?.destroy();
+			if (audioPath) await rpc("discard-exported-temp", audioPath).catch(() => {});
 			if (this.decoder) {
 				await rpc("arch-decoder-close", this.decoder).catch(() => {});
 				this.decoder = null;

@@ -1,187 +1,204 @@
-use super::{files, media};
+use super::{capture_source, files, media, recording_segments, sidecar_capture::Sidecar};
 use anyhow::{bail, Context, Result};
-use nix::{
-    sys::signal::{kill, Signal},
-    unistd::Pid,
-};
 use serde_json::{json, Value};
-use std::{
-    fs,
-    path::PathBuf,
-    process::{Child, Command, Stdio},
-    time::{Duration, Instant},
-};
+use std::{fs, path::PathBuf, process::Child, time::Instant};
+
+pub use capture_source::sources;
 #[derive(Default)]
 pub struct Recorder {
-    pub sidecars: Vec<super::sidecar_capture::Sidecar>,
+    pub sidecars: Vec<Sidecar>,
     pub child: Option<Child>,
     pub output: Option<PathBuf>,
     pub paused: bool,
-    pub started: Option<Instant>,
-}
-pub fn sources() -> Result<Value> {
-    let monitors: Value = serde_json::from_slice(&media::command("hyprctl", &["monitors", "-j"])?)?;
-    let mut list = Vec::new();
-    for monitor in monitors.as_array().context("Invalid monitor response")? {
-        list.push(json!({"id":format!("screen:{}",monitor["name"].as_str().unwrap_or_default()),"name":monitor["name"],"sourceType":"screen","display_id":monitor["id"].to_string(),"thumbnail":"","bounds":monitor}));
-    }
-    let windows: Value = serde_json::from_slice(&media::command("hyprctl", &["clients", "-j"])?)?;
-    for window in windows.as_array().context("Invalid window response")? {
-        list.push(json!({"id":format!("window:{}",window["address"].as_str().unwrap_or_default()),"name":window["title"],"appName":window["class"],"sourceType":"window","bounds":window,"thumbnail":""}));
-    }
-    Ok(json!(list))
+    active_path: Option<PathBuf>,
+    staging: Option<PathBuf>,
+    segments: Vec<PathBuf>,
+    source: String,
+    options: Value,
+    started: Option<Instant>,
+    elapsed: f64,
+    error: Option<String>,
 }
 impl Recorder {
     pub fn status(&mut self) -> Value {
-        if let Some(child) = &mut self.child {
-            if child.try_wait().ok().flatten().is_some() {
-                self.child = None;
-            }
+        let failed_device = self.sidecars.iter_mut().find_map(|sidecar| {
+            sidecar.child.try_wait().ok().flatten().map(|status| {
+                format!(
+                    "Capture device exited ({status}); inspect {}",
+                    sidecar.path.with_extension("log").display()
+                )
+            })
+        });
+        if let Some(error) = failed_device {
+            self.error = Some(error);
+            let _ = self.finish_segment();
+            self.paused = false;
         }
-        json!({"success":true,"recording":self.child.is_some(),"paused":self.paused,"output":self.output,"pid":self.child.as_ref().map(Child::id),"elapsed":self.started.map(|i|i.elapsed().as_secs_f64()).unwrap_or(0.)})
+        let exited = self
+            .child
+            .as_mut()
+            .and_then(|c| c.try_wait().ok().flatten());
+        if let Some(status) = exited {
+            self.error = Some(format!(
+                "Recorder exited ({status}); finalized segments are available for recovery"
+            ));
+            let _ = self.finish_segment();
+            self.paused = false;
+        }
+        let elapsed = self.elapsed
+            + self
+                .started
+                .map(|i| i.elapsed().as_secs_f64())
+                .unwrap_or(0.);
+        json!({"success":true,"recording":self.child.is_some() || self.paused,"paused":self.paused,"output":self.output,"pid":self.child.as_ref().map(Child::id),"elapsed":elapsed,"error":self.error,"recoveryManifest":self.staging.as_ref().map(|p|p.join("session.json"))})
     }
     pub fn start(&mut self, source: &str, options: &Value) -> Result<Value> {
         if self.status()["recording"] == true {
             bail!("A recording is already active");
         }
-        let output = if let Some(p) = options["output"].as_str() {
-            PathBuf::from(p)
-        } else {
-            files::root().join("recordings").join(format!(
-                "recording-{}.mp4",
-                chrono::Local::now().format("%Y%m%d-%H%M%S")
-            ))
-        };
+        let output = options["output"]
+            .as_str()
+            .map(PathBuf::from)
+            .unwrap_or_else(|| {
+                files::root().join("recordings").join(format!(
+                    "recording-{}-{}.mp4",
+                    chrono::Local::now().format("%Y%m%d-%H%M%S"),
+                    &uuid::Uuid::new_v4().to_string()[..8]
+                ))
+            });
         if output.exists() {
             bail!("Output already exists");
         }
+        if output.extension().and_then(|s| s.to_str()) != Some("mp4") {
+            bail!("Recording output must end in .mp4");
+        }
         fs::create_dir_all(output.parent().context("Output directory missing")?)?;
-        let mut command = Command::new("wf-recorder");
-        command.args([
-            "-f",
-            output.to_str().context("Invalid output path")?,
-            "-c",
-            "libx264",
-            "-p",
-            "preset=ultrafast",
-        ]);
-        if let Some(monitor) = source.strip_prefix("screen:") {
-            command.args(["-o", monitor]);
-        } else if source.starts_with("window:") {
-            let selected = sources()?
-                .as_array()
-                .unwrap()
-                .iter()
-                .find(|s| s["id"] == source)
-                .cloned()
-                .context("Window is no longer available")?;
-            let b = &selected["bounds"];
-            let x = b["at"][0].as_i64().context("Window position unavailable")?;
-            let y = b["at"][1].as_i64().context("Window position unavailable")?;
-            let w = b["size"][0].as_i64().context("Window size unavailable")?;
-            let h = b["size"][1].as_i64().context("Window size unavailable")?;
-            command.args(["-g", &format!("{x},{y} {w}x{h}")]);
-        } else {
-            bail!("Select a screen or window from sources list");
-        }
-        if options["systemAudio"].as_bool().unwrap_or(false) {
-            command.arg("--audio");
-        }
-        if options["hideCursor"].as_bool().unwrap_or(false) {
-            command.arg("--no-cursor");
-        }
-        let log = fs::File::create(output.with_extension("capture.log"))?;
-        command
-            .stdin(Stdio::null())
-            .stdout(Stdio::null())
-            .stderr(log);
-        let mut child = command.spawn().context("wf-recorder could not start")?;
-        std::thread::sleep(Duration::from_millis(350));
-        if let Some(status) = child.try_wait()? {
-            bail!(
-                "Recorder exited ({status}); inspect {}",
-                output.with_extension("capture.log").display()
-            );
-        }
-        self.child = Some(child);
-        let device_result = (|| -> Result<()> {
-            if let Some(source) = options["microphone"].as_str() {
-                self.sidecars
-                    .push(super::sidecar_capture::Sidecar::microphone(
-                        &output, source,
-                    )?);
-            }
-            if let Some(device) = options["webcam"].as_str() {
-                self.sidecars
-                    .push(super::sidecar_capture::Sidecar::webcam(&output, device)?);
-            }
-            Ok(())
-        })();
-        if let Err(error) = device_result {
-            let _ = self.stop();
-            self.sidecars.clear();
-            return Err(error);
-        }
         self.output = Some(output.clone());
-        self.started = Some(Instant::now());
+        self.staging = Some(
+            files::root()
+                .join(".cache")
+                .join(format!("capture-{}", uuid::Uuid::new_v4())),
+        );
+        fs::create_dir_all(self.staging.as_ref().unwrap())?;
+        self.segments.clear();
+        self.source = source.to_string();
+        self.options = options.clone();
+        self.elapsed = 0.;
+        self.error = None;
         self.paused = false;
+        self.begin_segment()?;
         Ok(
             json!({"success":true,"path":output,"sessionId":uuid::Uuid::new_v4().to_string(),"hudCaptureExclusion":false}),
         )
     }
-    pub fn pause(&mut self, paused: bool) -> Result<Value> {
-        let child = self.child.as_ref().context("No active recording")?;
-        kill(
-            Pid::from_raw(child.id() as i32),
-            if paused {
-                Signal::SIGSTOP
-            } else {
-                Signal::SIGCONT
-            },
-        )?;
-        for sidecar in &self.sidecars {
-            sidecar.signal(if paused {
-                Signal::SIGSTOP
-            } else {
-                Signal::SIGCONT
-            })?;
+    fn begin_segment(&mut self) -> Result<()> {
+        let path = self
+            .staging
+            .as_ref()
+            .context("Capture staging missing")?
+            .join(format!("segment-{}.mp4", self.segments.len()));
+        self.child = Some(capture_source::spawn(&self.source, &self.options, &path)?);
+        self.active_path = Some(path.clone());
+        self.started = Some(Instant::now());
+        let result = (|| -> Result<()> {
+            if let Some(source) = self.options["microphone"].as_str() {
+                self.sidecars.push(Sidecar::microphone(&path, source)?);
+            }
+            if let Some(device) = self.options["webcam"].as_str() {
+                self.sidecars.push(Sidecar::webcam(&path, device)?);
+            }
+            self.write_manifest()
+        })();
+        if let Err(error) = result {
+            let _ = self.finish_segment();
+            self.paused = false;
+            return Err(error);
         }
-        self.paused = paused;
+        Ok(())
+    }
+    fn write_manifest(&self) -> Result<()> {
+        let mut segments = self.segments.clone();
+        if let Some(path) = &self.active_path {
+            segments.push(path.clone());
+        }
+        files::write_json(
+            &self
+                .staging
+                .as_ref()
+                .context("Capture staging missing")?
+                .join("session.json"),
+            &json!({"version":1,"output":self.output,"segments":segments}),
+        )
+    }
+    fn finish_segment(&mut self) -> Result<()> {
+        let mut first_error = None;
+        if let Some(mut child) = self.child.take() {
+            if let Err(error) = super::capture_process::stop(&mut child) {
+                first_error = Some(error);
+            }
+        }
+        for sidecar in &mut self.sidecars {
+            if let Err(error) = sidecar.stop() {
+                if first_error.is_none() {
+                    first_error = Some(error);
+                }
+            }
+        }
+        self.sidecars.clear();
+        if let Some(started) = self.started.take() {
+            self.elapsed += started.elapsed().as_secs_f64();
+        }
+        if let Some(path) = self.active_path.take() {
+            if media::probe(&path).is_ok() {
+                self.segments.push(path);
+            } else if first_error.is_none() {
+                first_error = Some(anyhow::anyhow!(
+                    "Recording segment is not playable; inspect {}",
+                    path.with_extension("capture.log").display()
+                ));
+            }
+        }
+        self.write_manifest()?;
+        first_error.map_or(Ok(()), Err)
+    }
+    pub fn pause(&mut self, paused: bool) -> Result<Value> {
+        if self.status()["recording"] != true {
+            bail!("No active recording");
+        }
+        if self.paused == paused {
+            return Ok(json!({"success":true}));
+        }
+        if paused {
+            self.finish_segment()?;
+            self.paused = true;
+        } else {
+            self.begin_segment()?;
+            self.paused = false;
+        }
         Ok(json!({"success":true}))
     }
     pub fn stop(&mut self) -> Result<Value> {
-        let mut child = self.child.take().context("No active recording")?;
-        if self.paused {
-            kill(Pid::from_raw(child.id() as i32), Signal::SIGCONT)?;
+        if self.child.is_none() && !self.paused && self.segments.is_empty() {
+            bail!("No active recording");
         }
-        kill(Pid::from_raw(child.id() as i32), Signal::SIGINT)?;
-        let deadline = Instant::now() + Duration::from_secs(15);
-        loop {
-            if child.try_wait()?.is_some() {
-                break;
-            }
-            if Instant::now() > deadline {
-                child.kill()?;
-                child.wait()?;
-                bail!("Recording finalization timed out; media may need recovery");
-            }
-            std::thread::sleep(Duration::from_millis(50));
+        if self.child.is_some() {
+            self.finish_segment()?;
         }
-        for sidecar in &mut self.sidecars {
-            sidecar.stop()?;
-        }
-        self.sidecars.clear();
         self.paused = false;
-        let output = self.output.clone().context("Recording path missing")?;
-        media::probe(&output)?;
-        Ok(
-            json!({"success":true,"path":output,"videoPath":output,"webcamPath":output.with_extension("webcam.mp4").is_file().then(||output.with_extension("webcam.mp4"))}),
-        )
+        let manifest = self
+            .staging
+            .as_ref()
+            .context("Capture staging missing")?
+            .join("session.json");
+        let result = recording_segments::recover(&manifest)?;
+        self.segments.clear();
+        self.staging = None;
+        Ok(result)
     }
 }
 impl Drop for Recorder {
     fn drop(&mut self) {
-        if self.child.is_some() {
+        if self.child.is_some() || self.paused {
             let _ = self.stop();
         }
     }

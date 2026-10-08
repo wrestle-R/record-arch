@@ -16,6 +16,13 @@ pub struct Sidecar {
 }
 impl Sidecar {
     pub fn microphone(video: &Path, source: &str) -> Result<Self> {
+        let available = super::devices::list()?;
+        if !available["microphones"]
+            .as_array()
+            .is_some_and(|devices| devices.iter().any(|d| d["name"] == source))
+        {
+            bail!("Select an available microphone from the device list");
+        }
         let path = video.with_extension("mic.wav");
         Self::start(
             path,
@@ -87,7 +94,13 @@ impl Sidecar {
         Ok(())
     }
     pub fn stop(&mut self) -> Result<()> {
-        if self.child.try_wait()?.is_some() {
+        if let Some(status) = self.child.try_wait()? {
+            if !status.success() {
+                bail!(
+                    "Capture device exited ({status}); inspect {}",
+                    self.path.with_extension("log").display()
+                );
+            }
             return Ok(());
         }
         self.signal(Signal::SIGCONT)?;

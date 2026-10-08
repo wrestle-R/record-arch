@@ -72,9 +72,6 @@ pub fn save(
     if !data.is_object() || !data["videoPath"].is_string() {
         bail!("Project must contain a videoPath");
     }
-    if data["projectId"].is_null() {
-        data["projectId"] = uuid::Uuid::new_v4().to_string().into();
-    }
     let path = if let Some(path) = path {
         Path::new(path).to_path_buf()
     } else if let Some(name) = name {
@@ -96,6 +93,20 @@ pub fn save(
             &uuid::Uuid::new_v4().to_string()[..8]
         ))
     };
+    if data["projectId"].is_null() {
+        // Legacy snapshots may omit the ID while the editor is saving the active file.
+        // Reuse identity only for that file, never for an arbitrary destination.
+        let active = state.project.as_ref().and_then(|p| p.canonicalize().ok());
+        let target = path.canonicalize().ok();
+        data["projectId"] = if target.is_some() && target == active {
+            files::read_json(&path)?["projectId"]
+                .as_str()
+                .map(|id| json!(id))
+                .unwrap_or_else(|| json!(uuid::Uuid::new_v4().to_string()))
+        } else {
+            json!(uuid::Uuid::new_v4().to_string())
+        };
+    }
     if path.exists() {
         let old = files::read_json(&path)?;
         if old["projectId"] != data["projectId"] {
@@ -109,6 +120,28 @@ pub fn save(
     Ok(
         json!({"success":true,"path":path,"project":data,"projectId":data["projectId"],"projectName":path.file_stem().unwrap_or_default().to_string_lossy()}),
     )
+}
+pub fn save_named(state: &mut State, mut data: Value, name: &str, copy: bool) -> Result<Value> {
+    let previous = state.project.clone();
+    if copy {
+        data["projectId"] = json!(uuid::Uuid::new_v4().to_string());
+    }
+    let result = save(state, data, None, Some(name))?;
+    if !copy {
+        if let Some(previous) =
+            previous.filter(|p| p != Path::new(result["path"].as_str().unwrap()))
+        {
+            if let Ok(previous) = files::managed(&previous) {
+                let trash = files::root().join(".trash").join(format!(
+                    "{}-{}",
+                    uuid::Uuid::new_v4(),
+                    previous.file_name().unwrap().to_string_lossy()
+                ));
+                fs::rename(previous, trash)?;
+            }
+        }
+    }
+    Ok(result)
 }
 pub fn latest(state: &mut State) -> Result<Value> {
     if let Some(path) = state.project.clone() {

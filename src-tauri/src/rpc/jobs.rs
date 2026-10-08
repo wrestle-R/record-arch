@@ -36,9 +36,7 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
       let output=Path::new(job["options"]["outputPath"].as_str().unwrap()).to_path_buf();
       if output.exists(){bail!("Export destination already exists");}
       fs::create_dir_all(output.parent().context("Output parent missing")?)?;
-      // create_new prevents overwriting a file created while frames were rendering.
-      let mut destination=fs::OpenOptions::new().write(true).create_new(true).open(&output)?;
-      std::io::copy(&mut fs::File::open(&temp)?,&mut destination)?;destination.sync_all()?;
+      files::publish(&temp,&output)?;
       fs::remove_file(temp)?;
       job["status"]="completed".into();job["path"]=json!(output);job["progress"]=100.into();
     }else{job["status"]="failed".into();job["error"]=result["error"].clone();}

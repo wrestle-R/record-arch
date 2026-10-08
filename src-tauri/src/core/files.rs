@@ -49,6 +49,28 @@ pub fn read_json(path: &Path) -> Result<Value> {
 pub fn write_json(path: &Path, value: &Value) -> Result<()> {
     atomic_write(path, &serde_json::to_vec_pretty(value)?)
 }
+/// Publish a large media file without exposing partial bytes or overwriting a destination.
+pub fn publish(source: &Path, destination: &Path) -> Result<()> {
+    let parent = destination
+        .parent()
+        .context("Destination must have a parent")?;
+    fs::create_dir_all(parent)?;
+    let temporary = parent.join(format!(".{}.media-tmp", uuid::Uuid::new_v4()));
+    let result = (|| {
+        let mut output = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&temporary)?;
+        std::io::copy(&mut fs::File::open(source)?, &mut output)?;
+        output.sync_all()?;
+        // Linking within the destination directory is atomic and fails if the name exists.
+        fs::hard_link(&temporary, destination)?;
+        fs::File::open(parent)?.sync_all()?;
+        Ok(())
+    })();
+    let _ = fs::remove_file(temporary);
+    result
+}
 pub fn safe_name(name: &str) -> String {
     let result: String = name
         .chars()

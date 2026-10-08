@@ -32,6 +32,15 @@ fn imported_media_survives_save_reopen_and_library_removal() {
     )
     .unwrap();
     assert_eq!(updated["path"], saved["path"]);
+    let mut legacy_snapshot = updated["project"].clone();
+    legacy_snapshot.as_object_mut().unwrap().remove("projectId");
+    let resaved = rpc::dispatch(
+        &state,
+        "save-project-file",
+        &[legacy_snapshot, json!(null), saved["path"].clone()],
+    )
+    .unwrap();
+    assert_eq!(resaved["projectId"], saved["projectId"]);
     let new_state = State::new().unwrap();
     let loaded = rpc::dispatch(&new_state, "load-current-project-file", &[]).unwrap();
     assert_eq!(loaded["project"]["editor"]["padding"], 42);
@@ -65,6 +74,46 @@ fn imported_media_survives_save_reopen_and_library_removal() {
     std::fs::write(&outside, b"private").unwrap();
     assert!(state.lock().unwrap().readable(&outside).is_err());
     assert!(files::managed(&outside).is_err());
+    let copy = rpc::dispatch(
+        &state,
+        "save-project-file-named",
+        &[
+            resaved["project"].clone(),
+            json!("Copy"),
+            json!(null),
+            json!("copy"),
+        ],
+    )
+    .unwrap();
+    assert_ne!(copy["projectId"], saved["projectId"]);
+    assert!(std::path::Path::new(saved["path"].as_str().unwrap()).is_file());
+    let renamed = rpc::dispatch(
+        &state,
+        "save-project-file-named",
+        &[
+            copy["project"].clone(),
+            json!("Renamed"),
+            json!(null),
+            json!("rename"),
+        ],
+    )
+    .unwrap();
+    assert_eq!(renamed["projectId"], copy["projectId"]);
+    assert!(!std::path::Path::new(copy["path"].as_str().unwrap()).exists());
+    let stream =
+        rpc::dispatch(&state, "export-stream-open", &[json!({"extension":"gif"})]).unwrap();
+    assert!(stream["tempPath"].is_string());
+    rpc::dispatch(
+        &state,
+        "export-stream-close",
+        &[stream["streamId"].clone(), json!({"abort":true})],
+    )
+    .unwrap();
+    assert!(!std::path::Path::new(stream["tempPath"].as_str().unwrap()).exists());
+    let destination = root.join("published.mp4");
+    files::publish(&source, &destination).unwrap();
+    assert!(files::publish(&outside, &destination).is_err());
+    assert_eq!(std::fs::read(&destination).unwrap(), b"fixture media");
     std::fs::remove_file(outside).unwrap();
     std::fs::remove_dir_all(root).unwrap();
 }

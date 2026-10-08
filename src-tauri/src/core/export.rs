@@ -50,9 +50,17 @@ impl Encoder {
                 "-c:v",
                 "libx264",
                 "-preset",
-                "fast",
-                "-crf",
-                "18",
+                match options["encodingMode"].as_str().unwrap_or("balanced") {
+                    "fast" => "ultrafast",
+                    "quality" => "slow",
+                    _ => "fast",
+                },
+                "-b:v",
+                &options["bitrate"]
+                    .as_u64()
+                    .filter(|v| *v >= 100_000 && *v <= 200_000_000)
+                    .unwrap_or(8_000_000)
+                    .to_string(),
                 "-pix_fmt",
                 "yuv420p",
                 "-vf",

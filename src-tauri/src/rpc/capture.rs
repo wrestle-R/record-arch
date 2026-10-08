@@ -8,7 +8,23 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
         "get-sources" | "arch-sources" => capture::sources(),
         "arch-devices" => crate::core::devices::list(),
         "arch-record-status" => Ok(s.recorder.status()),
-        "arch-record-start" => string(a, 0).and_then(|source| s.recorder.start(source, arg(a, 1))),
+        "arch-record-recover" => string(a, 0).and_then(|p| {
+            anyhow::ensure!(
+                s.recorder.status()["recording"] != true,
+                "Stop recording before recovery"
+            );
+            crate::core::recording_segments::recover(Path::new(p))
+        }),
+        "arch-record-start" => string(a, 0).and_then(|source| {
+            if let Some(hide_windows) = &s.before_capture {
+                hide_windows()?;
+            }
+            let result = s.recorder.start(source, arg(a, 1));
+            if result.is_err() {
+                s.event("arch-show-recording-windows", json!([]));
+            }
+            result
+        }),
         "arch-record-stop" | "stop-ffmpeg-recording" => s.recorder.stop().and_then(|v| {
             if let Some(p) = v["path"].as_str() {
                 s.select_video(Path::new(p))?;

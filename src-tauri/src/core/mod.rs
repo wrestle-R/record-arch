@@ -17,3 +17,7 @@ pub mod recordings;
 pub mod decoder;
 
 pub mod models;
+
+mod capture_process;
+mod capture_source;
+pub mod recording_segments;

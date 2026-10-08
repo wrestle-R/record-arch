@@ -8,6 +8,7 @@ use std::{
 };
 
 pub struct State {
+    pub before_capture: Option<Box<dyn Fn() -> Result<()> + Send + Sync>>,
     pub video: Option<PathBuf>,
     pub renderer_ready: bool,
     pub unsaved: bool,
@@ -28,6 +29,7 @@ impl State {
     pub fn new() -> Result<Shared> {
         files::init()?;
         Ok(Arc::new(Mutex::new(Self {
+            before_capture: None,
             video: None,
             renderer_ready: false,
             unsaved: false,

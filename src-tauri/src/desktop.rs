@@ -78,6 +78,19 @@ pub fn run() {
         .manage(state.clone())
         .invoke_handler(tauri::generate_handler![command])
         .setup(move |app| {
+            let capture_app = app.handle().clone();
+            state.lock().unwrap().before_capture = Some(Box::new(move || {
+                let (sender, receiver) = std::sync::mpsc::channel();
+                let handle = capture_app.clone();
+                capture_app.run_on_main_thread(move || {
+                    for window in handle.webview_windows().values() { let _ = window.hide(); }
+                    let _ = sender.send(());
+                })?;
+                receiver.recv_timeout(std::time::Duration::from_secs(5))?;
+                // Let the compositor present the hidden windows before requesting frames.
+                std::thread::sleep(std::time::Duration::from_millis(100));
+                Ok(())
+            }));
             if let Some(path) = std::env::var_os("RECORD_ARCH_SMOKE_VIDEO") {
                 state
                     .lock()
@@ -161,6 +174,10 @@ pub fn run() {
                     } else if s.recorder.status()["recording"] == true {
                         api.prevent_close();
                         let _ = window.hide();
+                    } else {
+                        // A hidden recorder window must not keep the process alive.
+                        api.prevent_close();
+                        window.app_handle().exit(0);
                     }
                 }
             }
@@ -171,7 +188,7 @@ pub fn run() {
             if let tauri::RunEvent::Exit = event {
                 let shared = app.state::<Shared>();
                 let mut s = shared.lock().unwrap();
-                if s.recorder.child.is_some() {
+                if s.recorder.status()["recording"] == true {
                     let _ = s.recorder.stop();
                 }
                 s.encoders.clear();

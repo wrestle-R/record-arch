@@ -73,6 +73,9 @@ enum RecordCommand {
     Stop,
     Pause,
     Resume,
+    Recover {
+        manifest: String,
+    },
 }
 #[derive(Subcommand)]
 enum ProjectCommand {
@@ -99,12 +102,23 @@ fn run(cli: &Cli) -> anyhow::Result<Value> {
         Commands::Devices => server::call("arch-devices", json!([]))?,
         Commands::Doctor => media::doctor(),
         Commands::Serve => {
+            let (sender, receiver) = std::sync::mpsc::channel();
+            ctrlc::set_handler(move || {
+                let _ = sender.send(());
+            })?;
             let state = State::new()?;
             server::start(&state)?;
             println!("{}", json!({"success":true,"socket":server::socket_path()}));
-            loop {
-                std::thread::park();
+            receiver.recv()?;
+            let mut s = state
+                .lock()
+                .map_err(|_| anyhow::anyhow!("Application state unavailable"))?;
+            if s.recorder.status()["recording"] == true {
+                s.recorder.stop()?;
             }
+            s.encoders.clear();
+            s.decoders.clear();
+            json!({"success":true,"stopped":true})
         }
         Commands::Sources {
             command: SourceCommand::List,
@@ -125,6 +139,9 @@ fn run(cli: &Cli) -> anyhow::Result<Value> {
             RecordCommand::Stop => server::call("arch-record-stop", json!([]))?,
             RecordCommand::Pause => server::call("arch-record-pause", json!([]))?,
             RecordCommand::Resume => server::call("arch-record-resume", json!([]))?,
+            RecordCommand::Recover { manifest } => {
+                server::call("arch-record-recover", json!([manifest]))?
+            }
         },
         Commands::Project { command } => match command {
             ProjectCommand::List => server::call("list-project-files", json!([]))?,

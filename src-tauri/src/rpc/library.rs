@@ -18,7 +18,7 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
         "load-current-project-file"=>library::latest(s)?,
         "open-project-file-at-path"=>library::load(s,Path::new(string(a,0)?))?,
         "save-project-file"=>library::save(s,arg(a,0).clone(),arg(a,2).as_str(),None)?,
-        "save-project-file-named"=>library::save(s,arg(a,0).clone(),None,arg(a,1).as_str())?,
+        "save-project-file-named"=>{if let Some(name)=arg(a,1).as_str(){library::save_named(s,arg(a,0).clone(),name,arg(a,3)=="copy")?}else{library::save(s,arg(a,0).clone(),None,None)?}},
         "create-project-file"=>library::save(s,arg(a,0).clone(),None,None)?,
         "get-project-preview"=>{let project=files::read_json(Path::new(string(a,0)?))?;{let video=project["videoPath"].as_str().ok_or_else(||anyhow::anyhow!("Missing project video"))?;let p=s.approve(Path::new(video))?;json!({"success":true,"value":{"project":project,"videoUrl":s.media_url(&p),"webcamUrl":null}})}},
         "rename-library-project"=>{let p=files::managed(Path::new(string(a,0)?))?;let target=p.with_file_name(format!("{}.recordarch",files::safe_name(string(a,1)?)));if target.exists(){bail!("Project name already exists");}fs::rename(&p,&target)?;if s.project.as_ref()==Some(&p){s.project=Some(target.clone());}json!({"success":true,"path":target})},
