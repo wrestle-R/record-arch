@@ -29,6 +29,13 @@ async fn command(
         });
         return Ok(json!({"success":true}));
     }
+    if channel == "arch-smoke-diagnostic" && std::env::var_os("RECORD_ARCH_SMOKE_VIDEO").is_some() {
+        eprintln!(
+            "Webview diagnostic: {}",
+            args.first().unwrap_or(&Value::Null)
+        );
+        return Ok(json!({"success":true}));
+    }
     if channel == "arch-close-approved" {
         state.lock().map_err(|e| e.to_string())?.unsaved = false;
         app.exit(0);
@@ -85,8 +92,10 @@ pub fn run() {
             let shared = state.clone();
             if std::env::var_os("RECORD_ARCH_SMOKE_VIDEO").is_some() {
                 let diagnostic = state.clone();
+                let diagnostic_app=app.handle().clone();
                 std::thread::spawn(move || {
                     std::thread::sleep(std::time::Duration::from_secs(8));
+                    if let Some(w)=diagnostic_app.get_webview_window("main"){let _=w.eval("window.__TAURI_INTERNALS__.invoke('command',{channel:'arch-smoke-diagnostic',args:[{url:location.href,body:document.body.innerText.slice(0,600),readyState:document.readyState,errors:window.recordArchStartupErrors??[],videoFrame:typeof VideoFrame,videoEncoder:typeof VideoEncoder}]})");}
                     diagnostic
                         .lock()
                         .unwrap()

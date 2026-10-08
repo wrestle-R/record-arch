@@ -8,6 +8,7 @@ type Config = ConstructorParameters<typeof VideoExporter>[0];
 export class NativeExporter {
 	private cancelled = false;
 	private session: string | null = null;
+	private decoder: string | null = null;
 	constructor(private config: Config) {}
 	cancel() {
 		this.cancelled = true;
@@ -42,6 +43,7 @@ export class NativeExporter {
 			this.session = started.sessionId;
 			const total = Math.ceil(duration * config.frameRate);
 			const start = performance.now();
+			let activeSegment: (typeof segments)[number] | undefined;
 			const canvas = document.createElement("canvas");
 			canvas.width = metadata.width;
 			canvas.height = metadata.height;
@@ -57,7 +59,19 @@ export class NativeExporter {
 						)
 					: 0;
 				if (segment) {
-					const frame = await rpc("arch-frame", path, sourceTime);
+					if (activeSegment !== segment) {
+						if (this.decoder) await rpc("arch-decoder-close", this.decoder);
+						const decoded = await rpc(
+							"arch-decoder-open",
+							path,
+							sourceTime,
+							config.frameRate / segment.speed,
+						);
+						if (!decoded.success) throw new Error(decoded.error);
+						this.decoder = decoded.sessionId;
+						activeSegment = segment;
+					}
+					const frame = await rpc("arch-decoder-next", this.decoder);
 					if (!frame.success) throw new Error(frame.error);
 					const image = new Image();
 					image.src = frame.dataUrl;
@@ -146,6 +160,10 @@ export class NativeExporter {
 			return { success: false, error: String(error) };
 		} finally {
 			renderer?.destroy();
+			if (this.decoder) {
+				await rpc("arch-decoder-close", this.decoder).catch(() => {});
+				this.decoder = null;
+			}
 			if (this.session) {
 				await rpc("arch-encode-cancel", this.session).catch(() => {});
 				this.session = null;

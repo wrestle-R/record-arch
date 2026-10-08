@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Record Arch</title>
     <script>
+      window.recordArchStartupErrors=[];
+      window.addEventListener('error',event=>window.recordArchStartupErrors.push(event.message));
+      window.addEventListener('unhandledrejection',event=>window.recordArchStartupErrors.push(String(event.reason)));
       // Paint the editor shell before the renderer bundle is downloaded or evaluated.
       // Keep recording overlays transparent during their own startup.
       document.documentElement.dataset.windowType =
@@ -65,7 +68,7 @@
         <div class="boot-timeline" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
       </div>
     </div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/bootstrap.ts"></script>
   </body>
 </html>
 

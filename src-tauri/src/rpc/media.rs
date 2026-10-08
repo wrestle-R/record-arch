@@ -34,6 +34,8 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
                 let path = s.readable(Path::new(string(a, 0)?))?;
                 crate::core::waveform::peaks(&path, arg(a, 1).as_u64().unwrap_or(1000) as usize)?
             }
+            "download-whisper-small-model" => crate::core::models::download()?,
+            "delete-whisper-small-model" => crate::core::models::delete()?,
             "generate-auto-captions" => {
                 let options = arg(a, 0);
                 let video = s.readable(Path::new(
@@ -59,7 +61,13 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
                 let path = s.readable(Path::new(string(a, 0)?))?;
                 json!({"success":true,"metadata":media::probe(&path)?})
             }
-            "arch-frame" | "get-recording-thumbnail" | "generate-wallpaper-thumbnail" => {
+            "arch-decoder-open" => {
+ let path=s.readable(Path::new(string(a,0)?))?;let decoder=crate::core::decoder::Decoder::start(&path,arg(a,1).as_f64().unwrap_or(0.),arg(a,2).as_f64().unwrap_or(30.))?;
+ let id=uuid::Uuid::new_v4().to_string();s.decoders.insert(id.clone(),decoder);json!({"success":true,"sessionId":id})
+ },
+ "arch-decoder-next" => {let image=s.decoders.get_mut(string(a,0)?).context("Unknown decoder")?.frame()?;json!({"success":true,"dataUrl":format!("data:image/png;base64,{}",STANDARD.encode(image))})},
+ "arch-decoder-close" => {s.decoders.remove(string(a,0)?);json!({"success":true})},
+ "arch-frame" | "get-recording-thumbnail" | "generate-wallpaper-thumbnail" => {
                 let path = s.readable(Path::new(string(a, 0)?))?;
                 let image = media::frame(&path, arg(a, 1).as_f64().unwrap_or(0.))?;
                 let url = format!("data:image/png;base64,{}", STANDARD.encode(image));

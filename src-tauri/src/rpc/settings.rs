@@ -76,9 +76,7 @@ pub fn handle(s: &mut State, c: &str, a: &[Value]) -> Option<Result<Value>> {
         }
         "get-screen-recording-permission-status" => json!({"success":true,"status":"unknown"}),
         "is-native-windows-capture-available" => json!(false),
-        "get-whisper-small-model-status" => {
-            json!({"success":true,"available":false,"exists":false})
-        }
+        "get-whisper-small-model-status" => crate::core::models::status(),
         "get-system-cursor-assets" => json!({"success":true,"assets":{}}),
         "get-video-audio-fallback-paths" => {
             let paths = string(a, 0)

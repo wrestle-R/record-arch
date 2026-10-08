@@ -13,3 +13,7 @@ pub mod sidecar_capture;
 pub mod captions;
 
 pub mod recordings;
+
+pub mod decoder;
+
+pub mod models;
