@@ -39,7 +39,7 @@ Everything stays under `~/Record-Arch` by default:
 - `.cache/`: temporary encoders, audio, and backend descriptor.
 - `.trash/`: recoverable library deletions.
 
-Set `RECORD_ARCH_HOME` to change the root. Original imported videos are kept unchanged. Existing `.recordly` projects can be opened.
+Set `RECORD_ARCH_HOME` to change the root. Original imported videos are kept unchanged. Existing `.recordly` projects can be opened. Paused captures use finalized segments in `.cache/capture-*`; `record status` reports a recovery manifest if the recorder exits unexpectedly. Recovery preserves completed segments, while an unfinished MP4 segment may be unusable.
 
 On Hyprland, the editor and recording window hide during capture. Stop from the tray or CLI. A visible overlay cannot reliably be excluded from full-monitor capture in this backend, so it is hidden. Window capture currently records a fixed region; moving the window does not move that region.
 
@@ -57,12 +57,14 @@ record-arch record status
 record-arch record pause
 record-arch record resume
 record-arch record stop
+record-arch record recover /absolute/path/session.json
 record-arch editor /absolute/path/video.mp4
 record-arch project list
 record-arch project create --video /absolute/path/video.mp4 --name Demo
 record-arch project inspect /absolute/path/Demo.recordarch
 record-arch project apply /absolute/path/Demo.recordarch --edits /absolute/path/editor-patch.json
 record-arch export start /absolute/path/Demo.recordarch --output /absolute/path/demo.mp4 --width 1920 --height 1080 --fps 30 --wait
+record-arch export list
 record-arch export status JOB_ID
 record-arch export cancel JOB_ID
 ```

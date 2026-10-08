@@ -4,13 +4,13 @@ This is a Tauri/Rust migration with the existing React editor retained. It is no
 
 | Area | Implementation | Verification / difference |
 | --- | --- | --- |
-| Editor launch | Latest project or empty editor; separate Open/Record actions | Browser flow verified; native checks tracked separately |
+| Editor launch | Latest project or empty editor; separate Open/Record actions | Browser and packaged WebKit startup/playback verified |
 | Projects | Original project schema, JSON persistence, autosave, backup, library | Rust roundtrip, identity, restore and access-boundary tests |
 | Visual editing | Original crop, backgrounds, shadow, rounding, zoom/spring motion, cursor styles, annotations, captions, presets, clips, speeds and trims | Original editor test suite retained; render integration uses original FrameRenderer |
 | MP4 export | Native FFmpeg decode/encode and audio mix; Pixi renders effects | Synthetic edited export produced H.264/AAC |
-| GIF export | Same rendered frames, FFmpeg palette conversion | Integration verification in progress |
-| Agent export | Submit/status/cancel jobs using the desktop effects renderer | Integration verification in progress |
-| Linux recording | wf-recorder display/window-region capture, system audio | Real compositor/codec compatibility needs hardware verification |
+| GIF export | Same rendered frames, FFmpeg palette conversion | UI save verified; CLI job checks included in the integration script |
+| Agent export | Submit/status/cancel jobs using the desktop effects renderer | Submission, progress, completion and cancellation verified |
+| Linux recording | wf-recorder display/window-region capture, system audio, segmented pause/resume and recovery | Real Hyprland headless-display capture verified; physical display configurations need verification |
 | Microphone/camera | FFmpeg PulseAudio/V4L2 sidecars, editor webcam settings | Device-specific verification required |
 | Recorder visibility | Windows hide; tray and CLI remain available | Visible HUD capture exclusion is not supported |
 | Window capture | Fixed Hyprland geometry region | Does not follow a moving window or isolate occlusion |

@@ -79,9 +79,22 @@ try:
     assert result['success'] is False
     assert not command('record', 'status')['recording']
     print('PASS: device failure cleans up screen recording')
+    output = root / 'recordings' / 'shutdown.mp4'
+    command('record', 'start', '--source', f'screen:{monitor}', '--output', str(output))
+    active = command('record', 'status')
+    time.sleep(.6)
+    backend.terminate()
+    assert backend.wait(timeout=20) == 0
+    assert output.is_file()
+    try:
+        os.kill(active['pid'], 0)
+        raise AssertionError('Recorder child survived backend shutdown')
+    except ProcessLookupError:
+        pass
+    print('PASS: backend shutdown finalizes capture and reaps children')
     print('Test artifacts:', root)
 finally:
-    if backend:
+    if backend and backend.poll() is None:
         try:
             if command('record', 'status')['recording']:
                 command('record', 'stop')

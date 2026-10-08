@@ -29,17 +29,29 @@ export function RecorderPanel({ onClose }: { onClose: () => void }) {
 	}, []);
 	useEffect(() => {
 		let disposed = false;
-		void rpc("arch-devices").then((result) => {
-			if (!disposed && result.success) setDevices(result);
-		}).catch((e) => { if (!disposed) setError(String(e)); });
-		const refresh = () => void rpc("arch-record-status").then((status) => {
-			if (disposed) return;
-			setRecording(Boolean(status.recording));
-			if (status.error) setError(status.error);
-		}).catch((e) => { if (!disposed) setError(String(e)); });
+		void rpc("arch-devices")
+			.then((result) => {
+				if (!disposed && result.success) setDevices(result);
+			})
+			.catch((e) => {
+				if (!disposed) setError(String(e));
+			});
+		const refresh = () =>
+			void rpc("arch-record-status")
+				.then((status) => {
+					if (disposed) return;
+					setRecording(Boolean(status.recording));
+					if (status.error) setError(status.error);
+				})
+				.catch((e) => {
+					if (!disposed) setError(String(e));
+				});
 		refresh();
 		const timer = window.setInterval(refresh, 1000);
-		return () => { disposed = true; window.clearInterval(timer); };
+		return () => {
+			disposed = true;
+			window.clearInterval(timer);
+		};
 	}, []);
 	async function start() {
 		setBusy(true);
